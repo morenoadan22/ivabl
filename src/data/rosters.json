@@ -1,0 +1,80 @@
+{
+  "Aztecas": [
+    { "number": "22", "firstName": "Adan", "lastName": "Moreno" },
+    { "number": "19", "firstName": "Ryan", "lastName": "Parker" },
+    { "number": "6", "firstName": "AJ", "lastName": "Moreno" },
+    { "number": "5", "firstName": "Luis", "lastName": "Briseño" },
+    { "number": "67", "firstName": "Karch", "lastName": "Pearson" },
+    { "number": "2", "firstName": "Angel", "lastName": "Carrillo" },
+    { "number": "27", "firstName": "Marco", "lastName": "Peralta" },
+    { "number": "26", "firstName": "Sergio", "lastName": "Ramirez" },
+    { "number": "27", "firstName": "David", "lastName": "Madero" },
+    { "number": "00", "firstName": "Josh", "lastName": "Smith" },
+    { "number": "3", "firstName": "Aiden", "lastName": "Avila" },
+    { "number": "14", "firstName": "Cole", "lastName": "Redden"},
+    { "number": "12", "firstName": "Khyle", "lastName": "Pearson" },
+    { "number": "15", "firstName": "Eddie", "lastName": "Ramirez" },
+    { "number": "44", "firstName": "Ricardo", "lastName": "Miranda" }
+  ],
+  "Bullies": [
+    { "number": "1", "firstName": "Leopoldo", "lastName": "Gil-Lamadrid" },
+    { "number": "00", "firstName": "Luis", "lastName": "Gil-Lamadrid" },
+    { "number": "25", "firstName": "CJ", "lastName": "Bermudez" },
+    { "number": "3", "firstName": "Esau", "lastName": "Madrigal" },
+    { "number": "2", "firstName": "Jose", "lastName": "Peña" },
+    { "number": "22", "firstName": "Edgardo", "lastName": "Garcia" },
+    { "number": "7", "firstName": "Carlos", "lastName": "Chao" },
+    { "number": "44", "firstName": "Christian", "lastName": "Navarrete" },
+    { "number": "", "firstName": "Logan", "lastName": "Higganbotum" },
+    { "number": "", "firstName": "Aiden", "lastName": "Yee" }
+  ],
+  "Hot Shotz": [
+    { "number": "27", "firstName": "Manny", "lastName": "Romero" },
+    { "number": "24", "firstName": "Ridge", "lastName": "McCurry" },
+    { "number": "1", "firstName": "Jorge", "lastName": "Auyon" },
+    { "number": "29", "firstName": "Sean", "lastName": "Cochran" },
+    { "number": "7", "firstName": "Shane", "lastName": "Guardado" },
+    { "number": "3", "firstName": "Will", "lastName": "Green" },
+    { "number": "93", "firstName": "Javier", "lastName": "Lopez" },
+    { "number": "21", "firstName": "Heric", "lastName": "Gutierrez" },
+    { "number": "17", "firstName": "Chris", "lastName": "Cotero" },
+    { "number": "4", "firstName": "Brock", "lastName": "Russel" },
+    { "number": "00", "firstName": "Zay", "lastName": "Carrillo" },
+    { "number": "16", "firstName": "Mikey", "lastName": "Prado" },
+    { "number": "14", "firstName": "Juan", "lastName": "Olmos" },
+    { "number": "66", "firstName": "Jerry", "lastName": "Fregoso" },
+    { "number": "71", "firstName": "John", "lastName": "Deforest" }
+  ],
+  "Sandlot": [
+    { "number": "5", "firstName": "Ruben", "lastName": "Magos" },
+    { "number": "14", "firstName": "Armando", "lastName": "Woo" },
+    { "number": "27", "firstName": "Felix", "lastName": "Castillo" },
+    { "number": "99", "firstName": "JC", "lastName": "Luna" },
+    { "number": "9", "firstName": "Frankie", "lastName": "Ponce" },
+    { "number": "2", "firstName": "Daniel", "lastName": "Galvan" },
+    { "number": "7", "firstName": "Fonzie", "lastName": "Ruiz" },
+    { "number": "20", "firstName": "Jacob", "lastName": "Hisel" },
+    { "number": "17", "firstName": "Alfredo", "lastName": "Meza" },
+    { "number": "69", "firstName": "Jesus", "lastName": "Barraza" },
+    { "number": "3", "firstName": "Jay", "lastName": "Torres" },
+    { "number": "22", "firstName": "Daniel", "lastName": "Enriquez" },
+    { "number": "32", "firstName": "Alberto", "lastName": "Valdez" }
+  ],
+  "Arabes": [
+    { "number": "", "firstName": "Angel", "lastName": "Hernandez" },
+    { "number": "", "firstName": "Ruben", "lastName": "De La Rosa" },
+    { "number": "", "firstName": "George", "lastName": "Villanueva" },
+    { "number": "", "firstName": "Nathan", "lastName": "Brownyard" },
+    { "number": "", "firstName": "Elijah", "lastName": "Salgado" },
+    { "number": "22", "firstName": "Victor", "lastName": "Benitez" },
+    { "number": "", "firstName": "Angel", "lastName": "Brodell" },
+    { "number": "", "firstName": "Reynaldo", "lastName": "Montiel" },
+    { "number": "", "firstName": "Jesus", "lastName": "Cisneros" },
+    { "number": "", "firstName": "Javier", "lastName": "Garcia" },
+    { "number":"" , "firstName": "Erick", "lastName": "Villareal" }
+  ],
+  "Los Grignos": [
+  ],
+  "Outlaws": [
+  ]
+}
