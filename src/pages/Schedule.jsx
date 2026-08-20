@@ -44,7 +44,7 @@ function GameLine({ game }) {
 }
 
 export default function Schedule() {
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   return (
     <div className="space-y-6">
       {/* Hero */}
@@ -145,7 +145,7 @@ export default function Schedule() {
                   <>
                     {showPlayoffHeader && (
                       <tr key={`ph-${wi}`}>
-                        <td colSpan={7} className="bg-amber-100 text-amber-900 text-xs font-black tracking-[0.18em] px-3 py-2 border-y border-amber-200">🏆 PLAYOFFS</td>
+                        <td colSpan={8} className="bg-amber-100 text-amber-900 text-xs font-black tracking-[0.18em] px-3 py-2 border-y border-amber-200">🏆 PLAYOFFS</td>
                       </tr>
                     )}
                     <tr key={wi} className={`border-t ${isPlayoff ? "bg-amber-50/40" : wi % 2 === 0 ? "bg-white" : "bg-cream/40"}`}>

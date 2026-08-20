@@ -390,7 +390,11 @@ export const schedule = [
         "away": "Sandlot",
         "home": "Arabes",
         "location": "Brawley",
-        "description": "Semi-Final 2"
+        "description": "Semi-Final 2",
+        "result" : {
+          "away": 1,
+          "home": 8
+        }
       }
     ]
   },
@@ -398,16 +402,23 @@ export const schedule = [
     "week": "Final",
     "games": [
       {
-        "date": "8/22",
-        "dayOfWeek": "Saturday",
-        "away": "Winner (Seed #1 vs Winner 4/5)",
-        "home": "Aztecas",
+        "date": "8/23",
+        "dayOfWeek": "Sunday",
+        "away": "Aztecas",
+        "home": "Arabes",
         "location": "Calexico",
         "description": "Championship - Final"
       }
     ]
   }
 ]
+// Patch: championship moved to Sunday 8/23 (was Saturday)
+{
+  const last = schedule[schedule.length - 1];
+  if (last?.week === "Final" && last.games?.[0]?.date === "8/23") {
+    last.games[0].dayOfWeek = "Sunday";
+  }
+}
 
 export function mapTeamNameToPage(teamName) {
   switch (teamName) {
