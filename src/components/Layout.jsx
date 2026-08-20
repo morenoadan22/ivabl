@@ -4,6 +4,7 @@ const nav = [
   { to: "/", label: "Schedule", end: true },
   { to: "/standings", label: "Standings" },
   { to: "/statistics", label: "Statistics" },
+  { to: "/live", label: "Live" },
   { to: "/rules", label: "Rules" },
   { to: "/locations", label: "Locations" },
 ];
@@ -24,20 +25,24 @@ export default function Layout({ children }) {
           </Link>
 
           <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none">
-            {nav.map(n => (
-              <NavLink
-                key={n.to}
-                to={n.to}
-                end={n.end}
-                className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition ${
-                    isActive ? "bg-white text-navy shadow" : "text-white/70 hover:text-white hover:bg-white/10"
-                  }`
-                }
-              >
-                {n.label}
-              </NavLink>
-            ))}
+            {nav.map(n => {
+              const isLive = n.to === "/live";
+              return (
+                <NavLink
+                  key={n.to}
+                  to={n.to}
+                  end={n.end}
+                  className={({ isActive }) =>
+                    `inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition ${
+                      isActive ? "bg-white text-navy shadow" : "text-white/70 hover:text-white hover:bg-white/10"
+                    } ${isLive && !isActive ? "ring-1 ring-red-500/30" : ""}`
+                  }
+                >
+                  {isLive && <span className="h-2 w-2 rounded-full bg-red-500 shadow shadow-red-500/30" />}
+                  {n.label}
+                </NavLink>
+              );
+            })}
           </nav>
 
           <a href="https://www.facebook.com/groups/538464853381722" target="_blank" rel="noreferrer" className="hidden md:inline-flex items-center gap-2 text-xs font-semibold text-white/80 hover:text-white">
