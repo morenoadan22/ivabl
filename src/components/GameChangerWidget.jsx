@@ -68,8 +68,8 @@ export default function GameChangerWidget() {
   }, []);
 
   return (
-    <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
-      <div className="px-5 sm:px-6 py-3 border-b bg-gradient-to-r from-navy to-navy-mid flex items-center justify-between gap-3">
+    <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden h-full flex flex-col">
+      <div className="px-5 sm:px-6 py-3 border-b bg-gradient-to-r from-navy to-navy-mid flex items-center justify-between gap-3 shrink-0">
         <div className="flex items-center gap-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse shadow shadow-emerald-400/30" />
           <h2 className="font-display font-bold text-white text-[13px] tracking-wide">LIVE SCORES — GAMECHANGER</h2>
@@ -84,9 +84,9 @@ export default function GameChangerWidget() {
         </a>
       </div>
 
-      <div className="bg-white">
+      <div className="bg-white flex-1 flex flex-col min-h-[250px]">
         {error ? (
-          <div className="p-6 text-center">
+          <div className="p-6 text-center flex-1 flex flex-col items-center justify-center">
             <p className="text-sm text-navy/70">Live scores temporarily unavailable.</p>
             <p className="text-xs text-navy/50 mt-1">{error}</p>
             <a href="https://web.gc.com/organizations/Cr9gsGVDWegK" target="_blank" rel="noreferrer" className="inline-flex mt-3 px-4 py-1.5 rounded-full bg-navy text-white text-xs font-bold">Open GameChanger</a>
@@ -95,12 +95,12 @@ export default function GameChangerWidget() {
           <div
             id={TARGET_ID}
             style={{ height: 250, minHeight: 250 }}
-            className="w-full overflow-auto"
+            className="w-full overflow-auto flex-1"
           />
         )}
       </div>
 
-      <div className="px-4 py-2 bg-cream/60 border-t flex items-center justify-between">
+      <div className="px-4 py-2 bg-cream/60 border-t flex items-center justify-between shrink-0">
         <span className="text-[11px] font-semibold text-navy/50">Powered by GameChanger • Updates automatically on game day</span>
         <a href="https://web.gc.com/organizations/Cr9gsGVDWegK" target="_blank" rel="noreferrer" className="sm:hidden text-[11px] font-bold text-navy">View on GC →</a>
       </div>

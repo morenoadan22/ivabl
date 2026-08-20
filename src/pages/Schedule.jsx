@@ -84,11 +84,21 @@ export default function Schedule() {
         </div>
       </div>
 
-      {/* GameChanger Live Scoreboard */}
-      <GameChangerWidget />
-
-      {/* Sponsors strip — compact, links to /sponsors */}
-      <SponsorBanner compact />
+      {/* GameChanger + Sponsors — 50/50 on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        <div className="h-full flex flex-col">
+          <GameChangerWidget />
+        </div>
+        <aside className="hidden lg:block sticky top-[88px] h-full">
+          <div className="h-full flex flex-col">
+            <SponsorBanner className="h-full" />
+          </div>
+        </aside>
+      </div>
+      {/* Sponsors — mobile: above schedule */}
+      <div className="lg:hidden">
+        <SponsorBanner compact />
+      </div>
 
       {/* Schedule — Week Cards (Mon-Sun) */}
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">

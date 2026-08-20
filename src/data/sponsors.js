@@ -1,7 +1,18 @@
 export const sponsors = [
-  // Replace placeholders with real sponsors. Tier controls size/prominence.
-  // logo can be /img/sponsors/your-logo.png (add files to public/img/sponsors/)
-  // { name: "Acme Hardware", logo: "/img/sponsors/acme.png", tier: "Gold", url: "https://acme.example.com" },
+  {
+    name: "State Farm - Marianne Valenzuela Fenley",
+    logo: "/img/sponsors/state_farm_banner.jpg",
+    banner: "/img/sponsors/state_farm_banner.jpg",
+    tier: "Gold",
+    url: "https://myagentmarianne.com/",
+  },
+  {
+    name: "Driscoll's Sports",
+    logo: "/img/sponsors/driscolls.jpeg",
+    banner: "/img/sponsors/driscolls.jpeg",
+    tier: "Gold",
+    url: "https://driscolls.net/",
+  },
 ];
 
 export const tiers = [
