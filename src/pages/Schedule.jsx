@@ -32,13 +32,17 @@ function GameLine({ game }) {
   const awayPrefix = hasResult ? `${as} – ` : "";
 
   return (
-    <div className="leading-snug text-[13px]">
-      <span className="text-navy/50 font-medium mr-1.5">{game.date}</span>
-      <TeamLink name={game.away} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
-      <span className="mx-1 text-navy/40">vs.</span>
-      <TeamLink name={game.home} scorePrefix={homePrefix} isWinner={homeWin} isLoser={awayWin} isTie={isTie} />
-      <Link to="/locations" className="ml-1.5 text-[11px] font-semibold px-1.5 py-0.5 rounded bg-navy/5 text-navy/70 hover:bg-navy hover:text-white transition">@{game.location}</Link>
-      {game.description && <div className="text-[11px] text-brick font-medium mt-0.5">{game.description}</div>}
+    <div className="leading-snug text-[13px] min-w-0 break-words">
+      <div className="flex flex-wrap items-baseline gap-x-1 gap-y-1">
+        <span className="text-navy/50 font-medium shrink-0">{game.date}</span>
+        <span className="inline-flex flex-wrap items-baseline gap-x-1 min-w-0">
+          <TeamLink name={game.away} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
+          <span className="text-navy/40">vs.</span>
+          <TeamLink name={game.home} scorePrefix={homePrefix} isWinner={homeWin} isLoser={awayWin} isTie={isTie} />
+        </span>
+        <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-navy/5 text-navy/70 hover:bg-navy hover:text-white transition shrink-0">@{game.location}</Link>
+      </div>
+      {game.description && <div className="text-[11px] text-brick font-medium mt-1.5 leading-tight break-words whitespace-normal">{game.description}</div>}
     </div>
   );
 }
@@ -82,10 +86,10 @@ export default function Schedule() {
       {/* GameChanger Live Scoreboard */}
       <GameChangerWidget />
 
-      {/* Schedule table */}
+      {/* Schedule — Week Cards (Mon-Sun) */}
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b bg-gradient-to-r from-navy to-navy-mid flex flex-wrap gap-3 items-center justify-between">
-          <h2 className="font-display font-bold text-white text-lg">Schedule</h2>
+          <h2 className="font-display font-bold text-white text-lg">Schedule • Mon — Sun</h2>
           <div className="flex items-center gap-2 text-[11px]">
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Winner</span>
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-red-400" /> Loss</span>
@@ -93,83 +97,85 @@ export default function Schedule() {
           </div>
         </div>
 
-        {/* Mobile: week cards */}
-        <div className="md:hidden divide-y">
+        <div className="p-4 sm:p-5 space-y-4 bg-cream/20">
           {schedule.map((week, wi) => {
             const isPlayoff = isPlayoffWeek(week);
+            const showPlayoffHeader = isPlayoff && wi > 0 && !isPlayoffWeek(schedule[wi - 1]);
+            const hasGames = week.games.length > 0;
             return (
-              <div key={wi} className={isPlayoff ? "bg-amber-50/60" : ""}>
-                {isPlayoff && wi > 0 && !isPlayoffWeek(schedule[wi - 1]) && (
-                  <div className="px-4 py-2 bg-amber-100 border-y border-amber-200 text-xs font-black tracking-widest text-amber-900">🏆 PLAYOFFS</div>
+              <div key={wi}>
+                {showPlayoffHeader && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="h-px flex-1 bg-amber-200" />
+                    <span className="px-3 py-1 rounded-full bg-amber-100 border border-amber-200 text-amber-900 text-xs font-black tracking-[0.16em]">🏆 PLAYOFFS</span>
+                    <span className="h-px flex-1 bg-amber-200" />
+                  </div>
                 )}
-                <div className={`px-4 py-3 flex items-center justify-between ${isPlayoff ? "bg-navy text-white" : "bg-cream"}`}>
-                  <span className={`text-xs font-black tracking-widest ${isPlayoff ? "text-amber-200" : "text-navy/60"}`}>WEEK {week.week}</span>
-                  <span className={`text-sm font-bold ${isPlayoff ? "text-white" : "text-navy"}`}>{isPlayoff ? week.week : `Week ${week.week}`}</span>
-                </div>
-                <div className="p-3 space-y-3">
-                  {days.map(day => {
-                    const games = week.games.filter(g => g.dayOfWeek === day);
-                    if (!games.length) return null;
-                    return (
-                      <div key={day} className="rounded-xl border border-black/5 bg-white p-3">
-                        <div className="text-[11px] font-bold tracking-widest text-navy/50 mb-1.5">{day.toUpperCase()}</div>
+                <div className={`rounded-2xl overflow-hidden ring-1 shadow-sm ${isPlayoff ? "ring-amber-200 bg-amber-50/30" : "ring-black/5 bg-white"}`}>
+                  <div className={`px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2 ${isPlayoff ? "bg-navy text-white" : "bg-navy text-white/95"}`}>
+                    <div className="flex items-center gap-2.5">
+                      <span className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full text-xs font-black ${isPlayoff ? "bg-amber-300 text-navy" : "bg-white text-navy"}`}>
+                        {typeof week.week === "number" ? week.week : "P"}
+                      </span>
+                      <span className="font-display font-bold text-sm sm:text-[15px]">
+                        {isPlayoff ? week.week : `Week ${week.week}`}
+                      </span>
+                      {isPlayoff && <span className="text-[11px] font-bold tracking-widest text-amber-200">PLAYOFF</span>}
+                    </div>
+                    <span className="text-xs font-medium text-white/70">
+                      {week.games.length} {week.games.length === 1 ? "game" : "games"}
+                      {hasGames && ` • ${[...new Set(week.games.map(g=>g.dayOfWeek))].join(" • ")}`}
+                    </span>
+                  </div>
+
+                  <div className="p-3 sm:p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2.5">
+                      {days.map(day => {
+                        const games = week.games.filter(g => g.dayOfWeek === day);
+                        const isEmpty = games.length === 0;
+                        return (
+                          <div
+                            key={day}
+                            className={`rounded-xl border p-2.5 flex-col min-h-[84px] min-w-0 overflow-hidden ${
+                              isEmpty
+                                ? "hidden lg:flex bg-black/[0.02] border-dashed border-black/10"
+                                : "flex bg-white border-black/5 shadow-sm"
+                            }`}
+                          >
+                            <div className={`text-[11px] font-black tracking-widest mb-1.5 ${isEmpty ? "text-navy/30" : "text-navy/50"}`}>
+                              <span>{day.slice(0, 3).toUpperCase()}</span>
+                            </div>
+                            {isEmpty ? (
+                              <span className="text-xs text-navy/20 mt-1">—</span>
+                            ) : (
+                              <div className="space-y-0 divide-y divide-black/5">
+                                {games.map((g, idx) => (
+                                  <div key={idx} className={idx === 0 ? "pb-2" : "py-2 last:pb-0"}>
+                                    <GameLine game={g} />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Handle any games with non-standard day (fallback) */}
+                    {week.games.filter(g => !days.includes(g.dayOfWeek)).length > 0 && (
+                      <div className="mt-2.5 rounded-xl border border-amber-200 bg-amber-50 p-2.5">
+                        <div className="text-[11px] font-black tracking-widest text-amber-800 mb-1">OTHER</div>
                         <div className="space-y-2">
-                          {games.map((g, idx) => <GameLine key={idx} game={g} />)}
+                          {week.games.filter(g => !days.includes(g.dayOfWeek)).map((g, idx) => (
+                            <GameLine key={`other-${idx}`} game={g} />
+                          ))}
                         </div>
                       </div>
-                    );
-                  })}
-                  {week.games.filter(g => !days.includes(g.dayOfWeek)).map((g, idx) => (
-                    <GameLine key={`other-${idx}`} game={g} />
-                  ))}
+                    )}
+                  </div>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        {/* Desktop: table */}
-        <div className="hidden md:block overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-navy text-white text-xs tracking-widest">
-                <th className="text-left font-bold px-3 py-3 w-[90px]">WEEK</th>
-                {days.map(d => <th key={d} className="text-left font-bold px-3 py-3">{d.toUpperCase()}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {schedule.map((week, wi) => {
-                const isPlayoff = isPlayoffWeek(week);
-                const showPlayoffHeader = isPlayoff && wi > 0 && !isPlayoffWeek(schedule[wi - 1]);
-                return (
-                  <>
-                    {showPlayoffHeader && (
-                      <tr key={`ph-${wi}`}>
-                        <td colSpan={8} className="bg-amber-100 text-amber-900 text-xs font-black tracking-[0.18em] px-3 py-2 border-y border-amber-200">🏆 PLAYOFFS</td>
-                      </tr>
-                    )}
-                    <tr key={wi} className={`border-t ${isPlayoff ? "bg-amber-50/40" : wi % 2 === 0 ? "bg-white" : "bg-cream/40"}`}>
-                      <td className={`px-3 py-3 align-top font-black text-xs tracking-widest ${isPlayoff ? "bg-navy text-amber-200" : "bg-navy text-white/90"}`}>
-                        {isPlayoff ? week.week : week.week}
-                      </td>
-                      {days.map(day => {
-                        const games = week.games.filter(g => g.dayOfWeek.includes(day));
-                        return (
-                          <td key={day} className="px-3 py-3 align-top min-w-[150px]">
-                            {games.length === 0 ? <span className="text-navy/20">—</span> : (
-                              <div className="space-y-2">
-                                {games.map((g, idx) => <GameLine key={idx} game={g} />)}
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </>
-                );
-              })}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
