@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { schedule, mapTeamNameToPage, isPlayoffWeek, isSeededPlaceholder } from "../data/schedule.js";
 import { getTeamByName } from "../data/teams.js";
 import GameChangerWidget from "../components/GameChangerWidget.jsx";
+import SponsorBanner from "../components/SponsorBanner.jsx";
 
 function TeamLink({ name, scorePrefix, isWinner, isLoser, isTie }) {
   if (isSeededPlaceholder(name)) {
@@ -85,6 +86,9 @@ export default function Schedule() {
 
       {/* GameChanger Live Scoreboard */}
       <GameChangerWidget />
+
+      {/* Sponsors strip — compact, links to /sponsors */}
+      <SponsorBanner compact />
 
       {/* Schedule — Week Cards (Mon-Sun) */}
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
