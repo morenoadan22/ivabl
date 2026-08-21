@@ -33,18 +33,41 @@ function GameLine({ game }) {
   const homePrefix = hasResult ? `${hs} – ` : "";
   const awayPrefix = hasResult ? `${as} – ` : "";
 
-  return (
-    <div className="leading-snug text-[13px] min-w-0 break-words">
-      <div className="flex flex-wrap items-baseline gap-x-1 gap-y-1">
-        <span className="text-navy/50 font-medium shrink-0">{game.date}</span>
-        <span className="inline-flex flex-wrap items-baseline gap-x-1 min-w-0">
+  if (hasResult) {
+    return (
+      <div className="rounded-lg bg-black/[0.03] border border-black/5 px-2.5 py-2 min-w-0 overflow-hidden">
+        <div className="flex flex-wrap items-center gap-1.5 mb-1">
+          <span className="text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded bg-navy text-white shrink-0">FINAL</span>
+          <span className="text-[11px] font-medium text-navy/50 shrink-0">{game.date}</span>
+          <div className="w-full flex justify-start">
+            <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-white border border-black/5 text-navy/60 hover:bg-navy hover:text-white transition">@{game.location}</Link>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words">
           <TeamLink name={game.away} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
-          <span className="text-navy/40">vs.</span>
+          <span className="text-navy/30 text-xs">vs.</span>
           <TeamLink name={game.home} scorePrefix={homePrefix} isWinner={homeWin} isLoser={awayWin} isTie={isTie} />
-        </span>
-        <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-navy/5 text-navy/70 hover:bg-navy hover:text-white transition shrink-0">@{game.location}</Link>
+        </div>
+        {game.description && <div className="text-[11px] text-navy/60 mt-1 leading-tight break-words">{game.description}</div>}
       </div>
-      {game.description && <div className="text-[11px] text-brick font-medium mt-1.5 leading-tight break-words whitespace-normal">{game.description}</div>}
+    );
+  }
+
+  return (
+    <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden">
+      <div className="flex flex-wrap items-center gap-1.5 mb-1">
+        <span className="text-[10px] font-black tracking-widest px-1 py-0.5 rounded bg-gold text-navy shrink-0">UPCOMING</span>
+        <span className="text-[11px] font-bold text-navy/60 shrink-0">{game.date} • 7:00 PM</span>
+        <div className="w-full flex justify-start">
+          <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-white border border-amber-200 text-navy/70 hover:bg-navy hover:text-white transition">@{game.location}</Link>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words font-medium">
+        <TeamLink name={game.away} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
+        <span className="text-navy/40 text-xs">vs.</span>
+        <TeamLink name={game.home} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
+      </div>
+      {game.description && <div className="text-[11px] text-brick font-semibold mt-1 leading-tight break-words">{game.description}</div>}
     </div>
   );
 }
@@ -201,11 +224,9 @@ export default function Schedule() {
                             {isEmpty ? (
                               <span className="text-xs text-navy/20 mt-1">—</span>
                             ) : (
-                              <div className="space-y-0 divide-y divide-black/5">
+                              <div className="space-y-2">
                                 {games.map((g, idx) => (
-                                  <div key={idx} className={idx === 0 ? "pb-2" : "py-2 last:pb-0"}>
-                                    <GameLine game={g} />
-                                  </div>
+                                  <GameLine key={idx} game={g} />
                                 ))}
                               </div>
                             )}
