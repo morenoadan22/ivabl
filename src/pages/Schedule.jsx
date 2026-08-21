@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { schedule, mapTeamNameToPage, isPlayoffWeek, isSeededPlaceholder } from "../data/schedule.js";
 import { getTeamByName } from "../data/teams.js";
 import GameChangerWidget from "../components/GameChangerWidget.jsx";
@@ -50,6 +51,35 @@ function GameLine({ game }) {
 
 export default function Schedule() {
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const [isReversed, setIsReversed] = useState(false);
+  const weekRefs = useRef([]);
+  const [showJump, setShowJump] = useState(true);
+
+  const nextWeekIndex = useMemo(() => {
+    const idx = schedule.findIndex(w => w.games.some(g => !g.result));
+    return idx === -1 ? -1 : idx;
+  }, []);
+  const displaySchedule = useMemo(() => (isReversed ? [...schedule].reverse() : schedule), [isReversed]);
+  const nextDisplayIndex = nextWeekIndex === -1 ? -1 : isReversed ? schedule.length - 1 - nextWeekIndex : nextWeekIndex;
+
+  const jumpToNext = () => {
+    const el = nextDisplayIndex !== -1 ? weekRefs.current[nextDisplayIndex] : null;
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  useEffect(() => {
+    if (nextDisplayIndex === -1) { setShowJump(false); return; }
+    const onScroll = () => {
+      const el = weekRefs.current[nextDisplayIndex];
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setShowJump(rect.top > 120 || rect.bottom < 80);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [nextDisplayIndex]);
+
   return (
     <div className="space-y-6">
       {/* Hero */}
@@ -104,17 +134,22 @@ export default function Schedule() {
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b bg-gradient-to-r from-navy to-navy-mid flex flex-wrap gap-3 items-center justify-between">
           <h2 className="font-display font-bold text-white text-lg">Schedule • Mon — Sun</h2>
-          <div className="flex items-center gap-2 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 text-[11px]">
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Winner</span>
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-red-400" /> Loss</span>
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-amber-300" /> Tie</span>
+            <button onClick={() => setIsReversed(v => !v)} className="ml-1 px-3 py-1.5 rounded-full bg-white text-navy text-xs font-bold hover:bg-cream transition">
+              {isReversed ? "Oldest first ↑" : "Newest first ↓"}
+            </button>
           </div>
         </div>
 
         <div className="p-4 sm:p-5 space-y-4 bg-cream/20">
-          {schedule.map((week, wi) => {
+          {displaySchedule.map((week, wi) => {
             const isPlayoff = isPlayoffWeek(week);
-            const showPlayoffHeader = isPlayoff && wi > 0 && !isPlayoffWeek(schedule[wi - 1]);
+            const prevWeek = wi > 0 ? displaySchedule[wi - 1] : null;
+            const showPlayoffHeader = isPlayoff && prevWeek && !isPlayoffWeek(prevWeek);
+            const isNext = wi === nextDisplayIndex;
             const hasGames = week.games.length > 0;
             return (
               <div key={wi}>
@@ -125,7 +160,10 @@ export default function Schedule() {
                     <span className="h-px flex-1 bg-amber-200" />
                   </div>
                 )}
-                <div className={`rounded-2xl overflow-hidden ring-1 shadow-sm ${isPlayoff ? "ring-amber-200 bg-amber-50/30" : "ring-black/5 bg-white"}`}>
+                <div
+                  ref={el => { weekRefs.current[wi] = el; }}
+                  className={`rounded-2xl overflow-hidden ring-1 shadow-sm scroll-mt-24 ${isNext ? "ring-2 ring-navy !bg-amber-50/20" : ""} ${isPlayoff ? "ring-amber-200 bg-amber-50/30" : "ring-black/5 bg-white"}`}
+                >
                   <div className={`px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2 ${isPlayoff ? "bg-navy text-white" : "bg-navy text-white/95"}`}>
                     <div className="flex items-center gap-2.5">
                       <span className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full text-xs font-black ${isPlayoff ? "bg-amber-300 text-navy" : "bg-white text-navy"}`}>
@@ -135,6 +173,7 @@ export default function Schedule() {
                         {isPlayoff ? week.week : `Week ${week.week}`}
                       </span>
                       {isPlayoff && <span className="text-[11px] font-bold tracking-widest text-amber-200">PLAYOFF</span>}
+                      {isNext && <span className="px-2 py-0.5 rounded-full bg-amber-300 text-navy text-[11px] font-black tracking-widest">NEXT</span>}
                     </div>
                     <span className="text-xs font-medium text-white/70">
                       {week.games.length} {week.games.length === 1 ? "game" : "games"}
@@ -192,6 +231,17 @@ export default function Schedule() {
           })}
         </div>
       </div>
+      {showJump && nextDisplayIndex !== -1 && (
+        <button
+          onClick={jumpToNext}
+          className="fixed bottom-6 right-6 z-30 inline-flex items-center gap-2 px-5 py-3 rounded-full bg-navy text-white text-sm font-bold shadow-xl hover:bg-navy-deep transition border border-white/10"
+        >
+          <span className="text-base">↓</span> Jump to Next
+          <span className="hidden sm:inline font-medium text-white/60">
+            — {typeof displaySchedule[nextDisplayIndex]?.week === "number" ? `Week ${displaySchedule[nextDisplayIndex].week}` : displaySchedule[nextDisplayIndex]?.week}
+          </span>
+        </button>
+      )}
     </div>
   );
 }
