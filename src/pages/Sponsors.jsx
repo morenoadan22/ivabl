@@ -26,6 +26,41 @@ export default function Sponsors() {
       {/* Current sponsors banner */}
       <SponsorBanner />
 
+      {/* Why Sponsor */}
+      <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+        <div className="px-6 py-5 border-b bg-cream/40">
+          <h2 className="font-display font-black text-navy text-xl">Why Sponsor IVABL?</h2>
+          <p className="text-sm text-navy/60 mt-1">Your support stays local — and works for you.</p>
+        </div>
+        <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-black/5 bg-white p-5">
+            <div className="text-gold text-xs font-black tracking-widest">SINCE 2019</div>
+            <div className="font-bold text-navy mt-1">100% Volunteer-Run</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed">No paid staff — every dollar goes to keeping adult baseball alive in the Valley, run by volunteers since 2019.</div>
+          </div>
+          <div className="rounded-xl border border-black/5 bg-white p-5">
+            <div className="text-brick text-xs font-black tracking-widest">COMMUNITY</div>
+            <div className="font-bold text-navy mt-1">For the Baseball Community</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed">We keep the game going for players 18+ — former high school, college, and lifelong ballplayers who still want to compete.</div>
+          </div>
+          <div className="rounded-xl border border-black/5 bg-white p-5">
+            <div className="text-brick text-xs font-black tracking-widest">GIVE BACK</div>
+            <div className="font-bold text-navy mt-1">Proceeds Support Local Schools</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed">Proceeds go back to the sports programs at the schools that lend us their fields — Calexico, Central, Brawley and more.</div>
+          </div>
+          <div className="rounded-xl border border-black/5 bg-white p-5">
+            <div className="text-gold text-xs font-black tracking-widest">501(C)(3) • TAX-DEDUCTIBLE</div>
+            <div className="font-bold text-navy mt-1">Business Exposure + Tax Break</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed">We’re a registered 501(c)(3) non-profit — your sponsorship is tax-deductible and gets you exposure on the field, website, and socials.</div>
+          </div>
+          <div className="rounded-xl border border-gold/20 bg-amber-50/30 p-5 sm:col-span-2">
+            <div className="text-gold text-xs font-black tracking-widest">BUILT-IN AUDIENCE</div>
+            <div className="font-bold text-navy mt-1">650+ Locals Reached Every Week</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed"><strong>650+ members</strong> in our <a href="https://www.facebook.com/groups/538464853381722" target="_blank" rel="noreferrer" className="underline text-navy hover:text-brick">Facebook group</a> and steady traffic to <strong>www.ivabl.com</strong> all season — your logo seen by players, families, and fans across Imperial Valley.</div>
+          </div>
+        </div>
+      </div>
+
       {/* Tiers */}
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         <div className="px-6 py-4 border-b bg-cream/40">
