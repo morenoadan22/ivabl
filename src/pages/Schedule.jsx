@@ -137,6 +137,45 @@ export default function Schedule() {
         </div>
       </div>
 
+      {/* CHAMPIONS BANNER — Season Over */}
+      <div className="rounded-[20px] overflow-hidden bg-gradient-to-br from-navy via-navy to-navy-deep shadow-xl shadow-black/20 ring-1 ring-amber-200/30">
+        <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-0">
+          <div className="p-6 sm:p-8 flex flex-col justify-center">
+            <div className="inline-flex items-center gap-2 text-[11px] font-black tracking-[0.18em] text-amber-300">
+              <span className="h-2 w-2 rounded-full bg-amber-300 animate-pulse" /> SEASON COMPLETE — 2026 SUMMER
+            </div>
+            <h2 className="font-display font-black text-[28px] sm:text-[36px] leading-none tracking-[-0.02em] text-white mt-3">
+              Aztecas<br />
+              <span className="text-amber-300">3X Champions</span>
+            </h2>
+            <p className="text-[13px] leading-6 text-white/70 mt-3 max-w-[460px]">
+              The Aztecas bested the Arabes <span className="text-white font-bold">2-1</span> in a well-played championship on Sunday, Aug 23 at Calexico — their <span className="text-amber-300 font-bold">third straight</span> tournament title.
+            </p>
+            <div className="flex flex-wrap gap-2 mt-4">
+              <span className="inline-flex items-center gap-1.5 text-xs font-black tracking-widest bg-amber-300 text-navy px-3 py-1.5 rounded-full">2026 CHAMPS</span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/10 text-white border border-white/15 px-3 py-1.5 rounded-full">Final: AZT 2 - ARA 1</span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/10 text-white border border-white/15 px-3 py-1.5 rounded-full">Calexico - Aug 23</span>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <a href="/team/aztecas" className="px-5 py-2.5 rounded-full bg-amber-300 text-navy text-sm font-black hover:bg-amber-200 transition inline-flex items-center justify-center">View Champs</a>
+              <a href="/standings" className="px-5 py-2.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition inline-flex items-center justify-center">Final standings</a>
+            </div>
+            <p className="text-[11px] font-medium text-white/50 mt-3">See you in the fall/winter — more teams, more fans. Thank you, players, managers & umpires.</p>
+          </div>
+          <div className="relative bg-black/20 flex flex-col">
+            <img
+              src="/img/team/aztecas_champs_3x.jpeg"
+              alt="Aztecas 2026 Summer Champions — team with trophy, third straight title"
+              className="w-full h-[280px] sm:h-[360px] md:h-full object-cover"
+              loading="eager"
+            />
+            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+              <p className="text-[11px] font-black tracking-[0.14em] text-amber-300 text-center">AZTECAS - 2-1 OVER ARABES - AUG 23, 2026</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* GameChanger + Sponsors — 50/50 on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
         <div className="h-full flex flex-col">

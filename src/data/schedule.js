@@ -407,7 +407,11 @@ export const schedule = [
         "away": "Aztecas",
         "home": "Arabes",
         "location": "Calexico",
-        "description": "Championship - Final"
+        "description": "Championship - Final",
+        "result": {
+          "away": 2,
+          "home": 1
+        }
       }
     ]
   }
