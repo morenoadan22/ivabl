@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVABL — Team Fee</title>
+<style>
+  *{box-sizing:border-box} body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:#0f1f3a; background:#f8f6f0; padding:24px}
+  .card{max-width:760px; margin:0 auto; background:white; border:1px solid #e8e0c8; border-radius:16px; overflow:hidden; box-shadow:0 8px 30px rgba(15,31,58,0.08)}
+  .head{background:#0f1f3a; color:white; padding:28px; text-align:center}
+  .head h1{margin:0; font-size:26px; font-weight:900; letter-spacing:-0.02em}
+  .head p{margin:8px 0 0; color:#ffd54f; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase}
+  .body{padding:24px 28px}
+  .base{text-align:center; padding:18px; background:#fff8e1; border:1px solid #f5e6a8; border-radius:12px}
+  .base .label{font-size:11px; font-weight:900; letter-spacing:0.12em; color:#6b7a99; text-transform:uppercase}
+  .base .price{font-size:36px; font-weight:900; color:#0f1f3a; margin:6px 0 0; letter-spacing:-0.02em}
+  .base .sub{font-size:12px; color:#6b7a99; margin-top:4px}
+  .tiers{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px; align-items:stretch}
+  .tier{background:white; border:1px solid #e8e0c8; border-radius:12px; padding:20px; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column}
+  .tier::before{content:""; position:absolute; top:0; left:0; right:0; height:4px}
+  .tier.bronze::before{background:#b7792e} .tier.silver::before{background:#9aa0b0} .tier.gold::before{background:#c9a04a}
+  .tier.gold{border-color:#e8d9a8; box-shadow:0 4px 16px rgba(201,160,74,0.12)}
+  .tier h3{margin:12px 0 2px; font-size:15px; font-weight:900; letter-spacing:-0.02em}
+  .tier .cost{font-size:22px; font-weight:900}
+  .bronze .cost{color:#b7792e} .silver .cost{color:#7a8194} .gold .cost{color:#c9a04a}
+  .tier ul{list-style:none; padding:0; margin:12px 0 0; font-size:12px; color:#5a6a8a; line-height:1.7; text-align:left}
+  .tier ul li{padding-left:14px; position:relative}
+  .tier ul li::before{content:"✓"; position:absolute; left:0; font-weight:700}
+  .bronze ul li::before{color:#b7792e} .silver ul li::before{color:#9aa0b0} .gold ul li::before{color:#c9a04a}
+  .fee{margin-top:auto; background:#0f1f3a; color:white; border-radius:10px; padding:10px}
+  .fee .you{font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#c8d0e0}
+  .fee .amt{font-size:20px; font-weight:900; color:#ffd54f; margin-top:2px}
+  .foot{padding:16px 28px; background:#f8f6f0; border-top:1px solid #e8e0c8; text-align:center; font-size:12px; color:#6b7a99; line-height:1.5}
+  @media(max-width:640px){.tiers{grid-template-columns:1fr} .base .price{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <h1>IVABL — Fall/Winter 2026</h1>
+    <p>You bring it, you keep it</p>
+  </div>
+  <div class="body">
+    <div class="base">
+      <div class="label">Base Team Fee</div>
+      <div class="price">$650</div>
+      <div class="sub">8+ teams, baseballs, umpire fees, field fees, insurance</div>
+    </div>
+
+    <div class="tiers">
+      <div class="tier bronze">
+        <h3>BRONZE</h3>
+        <div class="cost">$100</div>
+        <ul>
+          <li>Social media post</li>
+          <li>Website logo</li>
+        </ul>
+        <div class="fee">
+          <div class="you">You Pay</div>
+          <div class="amt">$560</div>
+        </div>
+      </div>
+      <div class="tier silver">
+        <h3>SILVER</h3>
+        <div class="cost">$250</div>
+        <ul>
+          <li>Social media post</li>
+          <li>Website logo</li>
+          <li>Banner at field</li>
+        </ul>
+        <div class="fee">
+          <div class="you">You Pay</div>
+          <div class="amt">$495</div>
+        </div>
+      </div>
+      <div class="tier gold">
+        <h3>GOLD</h3>
+        <div class="cost">$500</div>
+        <ul>
+          <li>Social media post</li>
+          <li>Website logo</li>
+          <li>Banner at field</li>
+          <li>PA announcement</li>
+          <li>Uniform patch</li>
+        </ul>
+        <div class="fee">
+          <div class="you">You Pay</div>
+          <div class="amt">$390</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:18px; padding:20px; background:white; border:1px solid #e8e0c8; border-radius:12px">
+    <p style="margin:0; font-size:13px; font-weight:900; color:#0f1f3a; letter-spacing:0.02em">Have a sponsor ready?</p>
+    <p style="margin:6px 0 14px; font-size:12px; color:#5a6a8a; line-height:1.5">Scan to support the league at <a href="https://www.ivabl.com/sponsors" style="color:#0f1f3a; font-weight:800; text-decoration:underline; text-underline-offset:2px">ivabl.com/sponsors</a></p>
+    <div style="display:inline-block; background:white; padding:12px; border:1px solid #e8e0c8; border-radius:12px">
+      <img src="data:image/png;base64,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" alt="QR code to ivabl.com/sponsors" width="160" height="160" style="display:block; width:160px; height:160px;" />
+    </div>
+    <p style="margin:10px 0 0; font-size:11px; color:#6b7a99; letter-spacing:0.08em; font-weight:700; text-transform:uppercase">ivabl.com/sponsors</p>
+  </div>
+
+  <div class="foot">You bring a sponsor → that discount goes straight to <b>your</b> team's fee. No split. Questions? DM or email morenoadan22@gmail.com</div>
+</div>
+</body>
+</html>
