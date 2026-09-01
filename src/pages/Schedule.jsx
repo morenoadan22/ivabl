@@ -125,14 +125,39 @@ export default function Schedule() {
               <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">5 of 7 → playoffs</span>
               <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">3-game eligibility</span>
             </div>
-            <div className="flex gap-2 mt-5">
+            <div className="flex gap-2 mt-5 flex-wrap">
+              <Link to="/tryouts" className="px-5 py-2.5 rounded-full bg-amber-300 text-navy text-sm font-black hover:bg-amber-200 transition shadow-sm">Tryouts — $10 →</Link>
               <Link to="/standings" className="px-4 py-2 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-deep transition">View standings</Link>
               <Link to="/locations" className="px-4 py-2 rounded-full bg-white border border-navy/15 text-navy text-sm font-semibold hover:bg-cream transition">Fields & maps</Link>
             </div>
+            <p className="text-[11px] font-medium text-navy/50 mt-2">May 30 • 8–10 AM • Sunflower Field • $10 → $65 team fee</p>
           </div>
           <div className="bg-cream border-t md:border-t-0 md:border-l border-gold-muted/60 p-6 flex flex-col items-center justify-center gap-4">
             <img src="/img/league_logo.jpeg" alt="League logo" className="w-full max-w-[260px] rounded-2xl shadow-lg bg-white p-3" />
             <p className="text-xs font-semibold text-navy/60 text-center">Imperial Valley’s wood-bat league — since 2026</p>
+          </div>
+        </div>
+      </div>
+
+      {/* TRYOUTS — Inline Banner (flyer-accurate) */}
+      <div className="rounded-[20px] overflow-hidden bg-white shadow-xl shadow-black/10 ring-1 ring-amber-200/60">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+          <div className="flex items-start gap-3">
+            <span className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#9e2b25] text-white font-black shrink-0 text-sm">$10</span>
+            <div>
+              <div className="text-[11px] font-black tracking-[0.16em] text-brick">BASEBALL TRYOUTS — MAY 30TH • 8–10 AM</div>
+              <div className="font-display font-black text-navy text-[18px] leading-tight">Sunflower Field — El Centro</div>
+              <div className="text-sm text-navy/60 mt-1 leading-relaxed">Imperial Valley Men's Baseball League • <strong className="text-navy">Adult League</strong> • $10 sign-up fee goes toward your <strong className="text-brick">$65 team fee</strong> once selected. 2299 W Adams, El Centro, CA 92243.</div>
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">May 30 • 8–10 AM</span>
+                <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Sunflower Field</span>
+                <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Contact Ridge McCurry</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row sm:flex-col gap-2 shrink-0">
+            <Link to="/tryouts" className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 rounded-full bg-navy text-white text-sm font-black hover:bg-navy-deep transition whitespace-nowrap">Sign up & pay — $10</Link>
+            <a href="mailto:morenoadan22@gmail.com" className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-white border border-navy/10 text-navy text-xs font-semibold hover:bg-cream transition">Contact Ridge McCurry</a>
           </div>
         </div>
       </div>
