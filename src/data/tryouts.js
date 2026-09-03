@@ -5,7 +5,7 @@ export const tryoutConfig = {
   tryoutWindow: "October 17th",
   tryoutDateTBD: "October 17th — 9–11 AM",
   tryoutTime: "9–11 AM",
-  seasonWindow: "Summer Baseball",
+  seasonWindow: "Season Starts October 31st",
   feeNote: "$10 sign-up fee will go towards $50 team fee once selected or team is formed.",
   locationName: "Sunflower Field",
   locationAddress: "2299 W Adams",

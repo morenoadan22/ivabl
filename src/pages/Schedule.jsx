@@ -145,11 +145,11 @@ export default function Schedule() {
           <div className="flex items-start gap-3">
             <span className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#9e2b25] text-white font-black shrink-0 text-sm">$10</span>
             <div>
-              <div className="text-[11px] font-black tracking-[0.16em] text-brick">BASEBALL TRYOUTS — MAY 30TH • 8–10 AM</div>
+              <div className="text-[11px] font-black tracking-[0.16em] text-brick">BASEBALL TRYOUTS — OCTOBER 17TH • 9–11 AM — SEASON STARTS OCT 31</div>
               <div className="font-display font-black text-navy text-[18px] leading-tight">Sunflower Field — El Centro</div>
-              <div className="text-sm text-navy/60 mt-1 leading-relaxed">Imperial Valley Men's Baseball League • <strong className="text-navy">Adult League</strong> • $10 sign-up fee goes toward your <strong className="text-brick">$65 team fee</strong> once selected. 2299 W Adams, El Centro, CA 92243.</div>
+              <div className="text-sm text-navy/60 mt-1 leading-relaxed">Imperial Valley Men's Baseball League • <strong className="text-navy">Adult League</strong> • $10 sign-up fee goes toward your <strong className="text-brick">$50 team fee</strong> once selected. 2299 W Adams, El Centro, CA 92243.</div>
               <div className="flex flex-wrap gap-1.5 mt-2">
-                <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">May 30 • 8–10 AM</span>
+                <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Oct 17 • 9–11 AM</span>
                 <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Sunflower Field</span>
                 <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Contact Ridge McCurry</span>
               </div>

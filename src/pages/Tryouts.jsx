@@ -188,11 +188,11 @@ export default function Tryouts() {
       <div id="signup" className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden scroll-mt-24">
         <div className="px-6 py-5 border-b bg-gradient-to-r from-navy to-navy-mid">
           <h2 className="font-display font-black text-white text-xl">Tryout interest — save my spot</h2>
-          <p className="text-white/70 text-sm mt-1">May 30th • {tryoutTime} • {locationName} • ${fee} tryout fee → ${teamFee} team fee if drafted. We’ll confirm by email/text.</p>
+          <p className="text-white/70 text-sm mt-1">{tryoutDate} • {tryoutTime} • {locationName} • ${fee} tryout fee → ${teamFee} team fee if drafted • Season starts Oct 31. We’ll confirm by email/text.</p>
         </div>
         <form action={formAction} method="POST" className="p-4 sm:p-8">
           <input type="hidden" name="_subject" value={formSubject} />
-          <input type="hidden" name="season" value="Tryouts — May 30th Sunflower Field" />
+          <input type="hidden" name="season" value="Tryouts — October 17th Sunflower Field — Season Starts Oct 31" />
           <input type="hidden" name="fee" value={`$${fee} tryout → $${teamFee} team fee`} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
