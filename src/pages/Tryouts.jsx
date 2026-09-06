@@ -225,10 +225,17 @@ export default function Tryouts() {
               </select>
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-[11px] font-bold tracking-widest text-navy">Bats / Throws</span>
-              <select name="bats_throws" defaultValue="" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
+              <span className="text-[11px] font-bold tracking-widest text-navy">Bats</span>
+              <select name="bats" defaultValue="" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
                 <option value="">Select…</option>
-                <option>R/R</option><option>L/L</option><option>R/L</option><option>L/R</option><option>Switch</option>
+                <option>R</option><option>L</option><option>Switch</option>
+              </select>
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-bold tracking-widest text-navy">Throws</span>
+              <select name="throws" defaultValue="" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
+                <option value="">Select…</option>
+                <option>R</option><option>L</option>
               </select>
             </label>
 
@@ -261,15 +268,6 @@ export default function Tryouts() {
                 <option>Need help / other</option>
               </select>
             </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-[11px] font-bold tracking-widest text-navy">Payment status</span>
-              <select name="payment_status" defaultValue="Will pay shortly" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
-                <option>Already paid</option>
-                <option>Will pay shortly</option>
-                <option>Paying cash at tryouts</option>
-              </select>
-            </label>
-
             <label className="sm:col-span-2 flex flex-col gap-1.5">
               <span className="text-[11px] font-bold tracking-widest text-navy">Anything else? (availability, injuries, etc.)</span>
               <textarea name="message" rows={3} placeholder="Tell us about your game, what you’re looking for, or questions about fees/schedule…" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold resize-y" />
@@ -285,7 +283,7 @@ export default function Tryouts() {
             <button type="submit" className="px-7 py-3 rounded-full bg-navy text-white font-display font-black tracking-widest text-sm hover:bg-navy-deep transition">
               SEND INTEREST →
             </button>
-            <span className="text-xs text-navy/50">Sends to the commissioner via Formspree. Questions? <a href={`mailto:${contactEmail}`} className="underline text-navy hover:text-brick">{contactEmail}</a> — contact {contactName}</span>
+            <span className="text-xs text-navy/50">Questions? <a href={`mailto:${contactEmail}`} className="underline text-navy hover:text-brick">{contactEmail}</a> — contact {contactName}</span>
           </div>
 
           {paymentPref.includes("Cash at") && (
