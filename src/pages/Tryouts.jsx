@@ -1,6 +1,62 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { tryoutConfig } from "../data/tryouts.js";
+
+const POSITIONS = ["P", "C", "1B", "2B", "3B", "SS", "OF", "Utility"];
+
+function PositionMultiSelect() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const onDown = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  const toggle = (pos) =>
+    setSelected((s) => (s.includes(pos) ? s.filter((p) => p !== pos) : [...s, pos]));
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-[11px] font-bold tracking-widest text-navy">Primary Position(s)</span>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="w-full rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold flex items-center justify-between gap-2 text-left"
+        >
+          <span className={selected.length ? "text-navy" : "text-navy/40"}>
+            {selected.length ? selected.join(", ") : "Select position(s)…"}
+          </span>
+          <span className="text-navy/40 text-xs shrink-0">{open ? "▴" : "▾"}</span>
+        </button>
+        {open && (
+          <div className="absolute z-10 mt-1 w-full rounded-lg border border-black/10 bg-white shadow-xl py-1 max-h-56 overflow-y-auto">
+            {POSITIONS.map((p) => (
+              <label key={p} className="flex items-center gap-2.5 px-3 py-2 text-sm text-navy hover:bg-cream cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selected.includes(p)}
+                  onChange={() => toggle(p)}
+                  className="h-4 w-4 rounded border-black/20 text-navy focus:ring-gold"
+                />
+                {p}
+              </label>
+            ))}
+          </div>
+        )}
+        {selected.map((p) => (
+          <input key={p} type="hidden" name="position" value={p} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -218,13 +274,7 @@ export default function Tryouts() {
               <input name="phone" type="tel" required placeholder="(760) 555-0100" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold" />
             </label>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-[11px] font-bold tracking-widest text-navy">Primary Position</span>
-              <select name="position" defaultValue="" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
-                <option value="">Select…</option>
-                <option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>OF</option><option>Utility</option>
-              </select>
-            </label>
+            <PositionMultiSelect />
             <label className="flex flex-col gap-1.5">
               <span className="text-[11px] font-bold tracking-widest text-navy">Bats</span>
               <select name="bats" defaultValue="" className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold">
@@ -308,6 +358,10 @@ export default function Tryouts() {
           <div className="rounded-xl border border-black/5 p-4">
             <div className="font-bold text-navy">What does the $10 cover?</div>
             <div className="text-navy/60 mt-1">Field time + evaluation. It goes toward your <strong className="text-navy">${teamFee} team fee</strong> once you’re selected or a team is formed. Season fees due before Week 1.</div>
+          </div>
+          <div className="rounded-xl border border-black/5 p-4">
+            <div className="font-bold text-navy">When are games?</div>
+            <div className="text-navy/60 mt-1"><strong className="text-navy">Saturday mornings</strong> at Stark Field and Sunflower Park. 8-game season starting <strong className="text-navy">October 31st</strong> — exact game times drop with the schedule.</div>
           </div>
           <div className="rounded-xl border border-black/5 p-4">
             <div className="font-bold text-navy">Who can try out?</div>
