@@ -58,7 +58,7 @@ export default function Tryouts() {
               <span className="block text-cream text-[36px] sm:text-[56px] tracking-wide">BASEBALL</span>
               <span className="block text-[#c0392b] text-[44px] sm:text-[68px] -mt-1 sm:-mt-2 drop-shadow-[0_2px_0_rgba(0,0,0,0.3)]">TRYOUTS!</span>
             </h1>
-            <p className="text-white/60 text-xs tracking-[0.18em] font-semibold mt-2">COMPETITIVE. FUN. SUMMER BASEBALL.</p>
+            <p className="text-white/60 text-xs tracking-[0.18em] font-semibold mt-2">COMPETITIVE. FUN. FALL/WINTER BASEBALL.</p>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export default function Tryouts() {
           </a>
         </div>
         <div className="bg-cream px-6 py-2.5 flex items-center justify-center gap-2 border-t border-navy/10">
-          <span className="text-[11px] font-black tracking-[0.16em] text-navy/60">COMPETITIVE. FUN. SUMMER BASEBALL.</span>
+          <span className="text-[11px] font-black tracking-[0.16em] text-navy/60">COMPETITIVE. FUN. FALL/WINTER BASEBALL.</span>
         </div>
       </div>
 

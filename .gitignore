@@ -57,3 +57,6 @@ coverage
 # Misc
 .cache
 .parcel-cache
+
+# Private docs — bylaws, minutes, EIN letter, SOS filings (contain PII, never commit)
+docs/
