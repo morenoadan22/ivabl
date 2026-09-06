@@ -85,7 +85,7 @@ export default function Layout({ children }) {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row gap-3 sm:items-center justify-between text-sm">
           <div className="text-white/60">© 2026 Imperial Valley Men's Baseball League • Wood bat. No exceptions.</div>
           <div className="flex items-center gap-4">
-            <a href="mailto:morenoadan22@gmail.com" className="text-gold hover:text-white transition">morenoadan22@gmail.com</a>
+            <a href="mailto:info@ivabl.com" className="text-gold hover:text-white transition">info@ivabl.com</a>
             <a href="https://www.facebook.com/groups/538464853381722" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-white/70 hover:text-white">
               <img src="/facebook-icon.png" alt="" className="h-4 w-4" /> Facebook
             </a>

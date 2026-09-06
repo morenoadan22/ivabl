@@ -157,7 +157,7 @@ export default function Schedule() {
           </div>
           <div className="flex flex-row sm:flex-col gap-2 shrink-0">
             <Link to="/tryouts" className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 rounded-full bg-navy text-white text-sm font-black hover:bg-navy-deep transition whitespace-nowrap">Sign up & pay — $10</Link>
-            <a href="mailto:morenoadan22@gmail.com" className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-white border border-navy/10 text-navy text-xs font-semibold hover:bg-cream transition">Contact Ridge McCurry</a>
+            <a href="mailto:info@ivabl.com" className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-white border border-navy/10 text-navy text-xs font-semibold hover:bg-cream transition">Contact Ridge McCurry</a>
           </div>
         </div>
       </div>

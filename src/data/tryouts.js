@@ -12,7 +12,7 @@ export const tryoutConfig = {
   locationCity: "El Centro, CA 92243",
   locationTBD: "Sunflower Field — 2299 W Adams, El Centro, CA 92243",
   contactName: "Ridge McCurry",
-  contactEmail: "morenoadan22@gmail.com",
+  contactEmail: "info@ivabl.com",
   // Payment options — display only, not clickable (update handles here)
   payments: [
     {

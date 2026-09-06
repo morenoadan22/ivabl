@@ -16,7 +16,7 @@ export default function Rules() {
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         <div className="px-6 py-6 border-b bg-gradient-to-r from-navy to-navy-mid">
           <h1 className="font-display font-black text-white text-[22px]">League Rules</h1>
-          <p className="text-white/70 text-sm mt-1">Please read before game day • Questions? <a href="mailto:morenoadan22@gmail.com" className="underline text-gold">morenoadan22@gmail.com</a></p>
+          <p className="text-white/70 text-sm mt-1">Please read before game day • Questions? <a href="mailto:info@ivabl.com" className="underline text-gold">info@ivabl.com</a></p>
         </div>
         <div className="p-6 grid sm:grid-cols-2 gap-4">
           {rules.map(r=>(
