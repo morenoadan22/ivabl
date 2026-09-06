@@ -18,7 +18,7 @@ export const tryoutConfig = {
     {
       id: "venmo",
       label: "Venmo",
-      handle: "@Adan-Moreno-1",
+      handle: "@iv-menbaseball",
       instructions: "Add your full name + “Tryout” in the note",
       highlight: true,
     },

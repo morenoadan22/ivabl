@@ -154,9 +154,10 @@ export default function Tryouts() {
               {isVenmo && (
                 <div className="mt-4 flex flex-col items-center">
                   <div className="bg-white p-3 rounded-xl border border-black/5 shadow-sm">
-                    <QRCodeSVG value="https://venmo.com/Adan-Moreno-1" size={132} bgColor="#ffffff" fgColor="#0f2536" level="M" />
+                    <img src="/img/venmo-qr-tryouts-code.jpeg" alt="Venmo QR — scan to pay $10 tryout fee to @iv-menbaseball" className="w-[160px] h-[160px] object-contain block bg-white" loading="lazy" onError={(e) => { e.currentTarget.style.display='none'; const fb=e.currentTarget.nextElementSibling; if(fb) fb.style.display='block'; }} />
+                    <div style={{display:'none'}}><QRCodeSVG value="https://venmo.com/iv-menbaseball" size={132} bgColor="#ffffff" fgColor="#0f2536" level="M" /></div>
                   </div>
-                  <span className="text-[11px] font-semibold text-navy/50 mt-2 tracking-wide">Scan to pay with Venmo</span>
+                  <span className="text-[11px] font-semibold text-navy/50 mt-2 tracking-wide">Scan to pay $10 with Venmo</span>
                 </div>
               )}
               {isZelle && (
