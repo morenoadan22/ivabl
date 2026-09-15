@@ -9,6 +9,7 @@ import Rules from "./pages/Rules.jsx";
 import Locations from "./pages/Locations.jsx";
 import TeamPage from "./pages/TeamPage.jsx";
 import Tryouts from "./pages/Tryouts.jsx";
+import PastSeasons from "./pages/PastSeasons.jsx";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/rules" element={<Rules />} />
           <Route path="/locations" element={<Locations />} />
           <Route path="/team/:slug" element={<TeamPage />} />
+          <Route path="/past-seasons" element={<PastSeasons />} />
           <Route path="/tryouts" element={<Tryouts />} />
           <Route path="/register" element={<Tryouts />} />
         </Routes>

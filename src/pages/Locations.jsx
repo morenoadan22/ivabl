@@ -14,7 +14,7 @@ export default function Locations() {
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         <div className="px-6 py-6 border-b bg-gradient-to-r from-navy to-navy-mid">
           <h1 className="font-display font-black text-white text-[22px]">Fields & Locations</h1>
-          <p className="text-white/70 text-sm mt-1">All games 7:00 PM • Click map for directions</p>
+          <p className="text-white/70 text-sm mt-1">Saturday mornings — 9:00 & 12:30 • Click map for directions</p>
         </div>
         <div className="p-4 sm:p-6 grid gap-6">
           {fields.map(f=>(

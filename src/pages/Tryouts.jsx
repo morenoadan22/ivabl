@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { tryoutConfig } from "../data/tryouts.js";
 
@@ -379,7 +380,7 @@ export default function Tryouts() {
       </div>
 
       <div className="text-center text-xs text-white/50">
-        Summer 2026 stats, standings & schedule remain on the home page — nothing cleared.
+        Summer 2026 champs & final standings live under <Link to="/past-seasons" className="underline hover:text-white">Past Seasons</Link>.
       </div>
     </div>
   );

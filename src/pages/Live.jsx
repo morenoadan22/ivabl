@@ -42,7 +42,7 @@ export default function Live() {
               </div>
               <h2 className="font-display font-bold text-white text-xl">No game live right now</h2>
               <p className="text-white/60 text-sm mt-2 max-w-[480px]">
-                When the GoPro is live, the game will appear here automatically. Check the schedule for first pitch (7:00 PM) or watch on YouTube.
+                When the GoPro is live, the game will appear here automatically. Check the schedule for first pitch (Saturday mornings, 9:00 AM & 12:30 PM) or watch on YouTube.
               </p>
               <div className="flex flex-wrap gap-2 justify-center mt-5">
                 <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-white text-navy text-sm font-bold hover:bg-cream transition">

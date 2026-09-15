@@ -16,7 +16,14 @@ export default function Standings() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          {rows.length === 0 ? (
+          <div className="p-6 sm:p-8 text-center">
+            <div className="text-[11px] font-black tracking-[0.16em] text-gold">FALL/WINTER 2026</div>
+            <div className="font-display font-black text-navy text-lg mt-2">No standings yet</div>
+            <p className="text-sm text-navy/60 mt-1">Games begin October 31st — standings appear here once results roll in.</p>
+          </div>
+        ) : (
+        <table className="w-full text-sm">
             <thead>
               <tr className="text-[11px] tracking-widest font-bold text-navy/60 border-b bg-cream/60">
                 <th className="text-left px-4 py-3">#</th>
@@ -59,6 +66,7 @@ export default function Standings() {
               })}
             </tbody>
           </table>
+          )}
         </div>
 
         <div className="px-6 py-4 bg-amber-50 border-t border-amber-200 flex items-center gap-2 text-sm">

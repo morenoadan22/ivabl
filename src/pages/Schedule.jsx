@@ -57,7 +57,7 @@ function GameLine({ game }) {
     <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden">
       <div className="flex flex-wrap items-center gap-1.5 mb-1">
         <span className="text-[10px] font-black tracking-widest px-1 py-0.5 rounded bg-gold text-navy shrink-0">UPCOMING</span>
-        <span className="text-[11px] font-bold text-navy/60 shrink-0">{game.date} • 7:00 PM</span>
+        <span className="text-[11px] font-bold text-navy/60 shrink-0">{game.date}</span>
         <div className="w-full flex justify-start">
           <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-white border border-amber-200 text-navy/70 hover:bg-navy hover:text-white transition">@{game.location}</Link>
         </div>
@@ -110,27 +110,27 @@ export default function Schedule() {
         <div className="grid md:grid-cols-[1.15fr_0.85fr] gap-0">
           <div className="p-6 sm:p-8 flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] text-brick">
-              <span className="h-2 w-2 rounded-full bg-brick animate-pulse" /> IMPERIAL VALLEY • SUMMER 2026
+              <span className="h-2 w-2 rounded-full bg-brick animate-pulse" /> IMPERIAL VALLEY • FALL/WINTER 2026
             </div>
             <h1 className="font-display font-black text-[30px] sm:text-[38px] leading-none tracking-[-0.03em] text-navy mt-2">
               IVABL<br />
-              <span className="text-navy/30">Summer Season 2026</span>
+              <span className="text-navy/30">Fall/Winter 2026</span>
             </h1>
             <p className="text-[14px] leading-6 text-navy/70 mt-3 max-w-[520px]">
-              Seven teams. Nine innings or 2.5 hours. All games at 7:00 PM. Home team keeps score + GameChanger lineups.
+              Targeting 10 teams. Eight games per team. Saturday mornings — 9:00 & 12:30 first pitch. Home team keeps score + GameChanger lineups.
               <strong className="text-navy"> No tobacco or alcohol on the field.</strong>
             </p>
             <div className="flex flex-wrap gap-2 mt-4">
-              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">7:00 PM starts</span>
-              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">5 of 7 → playoffs</span>
-              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">3-game eligibility</span>
+              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">Sat 9:00 & 12:30</span>
+              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">8 games per team</span>
+              <span className="text-xs font-semibold bg-cream border border-gold-muted text-navy px-3 py-1.5 rounded-full">Kickoff Oct 31</span>
             </div>
             <div className="flex gap-2 mt-5 flex-wrap">
               <Link to="/tryouts" className="px-5 py-2.5 rounded-full bg-amber-300 text-navy text-sm font-black hover:bg-amber-200 transition shadow-sm">Tryouts — $10 →</Link>
               <Link to="/standings" className="px-4 py-2 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-deep transition">View standings</Link>
               <Link to="/locations" className="px-4 py-2 rounded-full bg-white border border-navy/15 text-navy text-sm font-semibold hover:bg-cream transition">Fields & maps</Link>
             </div>
-            <p className="text-[11px] font-medium text-navy/50 mt-2">May 30 • 8–10 AM • Sunflower Field • $10 → $65 team fee</p>
+            <p className="text-[11px] font-medium text-navy/50 mt-2">Tryouts Oct 17 • 9–11 AM • Sunflower Field • $10 → $600 team fee</p>
           </div>
           <div className="bg-cream border-t md:border-t-0 md:border-l border-gold-muted/60 p-6 flex flex-col items-center justify-center gap-4">
             <img src="/img/league_logo.jpeg" alt="League logo" className="w-full max-w-[260px] rounded-2xl shadow-lg bg-white p-3" />
@@ -147,7 +147,7 @@ export default function Schedule() {
             <div>
               <div className="text-[11px] font-black tracking-[0.16em] text-brick">BASEBALL TRYOUTS — OCTOBER 17TH • 9–11 AM — SEASON STARTS OCT 31</div>
               <div className="font-display font-black text-navy text-[18px] leading-tight">Sunflower Field — El Centro</div>
-              <div className="text-sm text-navy/60 mt-1 leading-relaxed">Imperial Valley Men's Baseball League • <strong className="text-navy">Adult League</strong> • $10 sign-up fee goes toward your <strong className="text-brick">$50 team fee</strong> once selected. 2299 W Adams, El Centro, CA 92243.</div>
+              <div className="text-sm text-navy/60 mt-1 leading-relaxed">Imperial Valley Men's Baseball League • <strong className="text-navy">Adult League</strong> • $10 sign-up fee goes toward your <strong className="text-brick">$600 team fee</strong> once selected. 2299 W Adams, El Centro, CA 92243.</div>
               <div className="flex flex-wrap gap-1.5 mt-2">
                 <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Oct 17 • 9–11 AM</span>
                 <span className="text-[11px] font-semibold bg-cream border border-gold-muted text-navy px-2.5 py-1 rounded-full">Sunflower Field</span>
@@ -158,45 +158,6 @@ export default function Schedule() {
           <div className="flex flex-row sm:flex-col gap-2 shrink-0">
             <Link to="/tryouts" className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 rounded-full bg-navy text-white text-sm font-black hover:bg-navy-deep transition whitespace-nowrap">Sign up & pay — $10</Link>
             <a href="mailto:info@ivabl.com" className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-white border border-navy/10 text-navy text-xs font-semibold hover:bg-cream transition">Contact Ridge McCurry</a>
-          </div>
-        </div>
-      </div>
-
-      {/* CHAMPIONS BANNER — Season Over */}
-      <div className="rounded-[20px] overflow-hidden bg-gradient-to-br from-navy via-navy to-navy-deep shadow-xl shadow-black/20 ring-1 ring-amber-200/30">
-        <div className="grid md:grid-cols-[1.2fr_0.8fr] gap-0">
-          <div className="p-6 sm:p-8 flex flex-col justify-center">
-            <div className="inline-flex items-center gap-2 text-[11px] font-black tracking-[0.18em] text-amber-300">
-              <span className="h-2 w-2 rounded-full bg-amber-300 animate-pulse" /> SEASON COMPLETE — 2026 SUMMER
-            </div>
-            <h2 className="font-display font-black text-[28px] sm:text-[36px] leading-none tracking-[-0.02em] text-white mt-3">
-              Aztecas<br />
-              <span className="text-amber-300">3X Champions</span>
-            </h2>
-            <p className="text-[13px] leading-6 text-white/70 mt-3 max-w-[460px]">
-              The Aztecas bested the Arabes <span className="text-white font-bold">2-1</span> in a well-played championship on Sunday, Aug 23 at Calexico — their <span className="text-amber-300 font-bold">third straight</span> tournament title.
-            </p>
-            <div className="flex flex-wrap gap-2 mt-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-black tracking-widest bg-amber-300 text-navy px-3 py-1.5 rounded-full">2026 CHAMPS</span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/10 text-white border border-white/15 px-3 py-1.5 rounded-full">Final: AZT 2 - ARA 1</span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/10 text-white border border-white/15 px-3 py-1.5 rounded-full">Calexico - Aug 23</span>
-            </div>
-            <div className="flex gap-2 mt-5">
-              <a href="/team/aztecas" className="px-5 py-2.5 rounded-full bg-amber-300 text-navy text-sm font-black hover:bg-amber-200 transition inline-flex items-center justify-center">View Champs</a>
-              <a href="/standings" className="px-5 py-2.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition inline-flex items-center justify-center">Final standings</a>
-            </div>
-            <p className="text-[11px] font-medium text-white/50 mt-3">See you in the fall/winter — more teams, more fans. Thank you, players, managers & umpires.</p>
-          </div>
-          <div className="relative bg-black/20 flex flex-col">
-            <img
-              src="/img/team/aztecas_champs_3x.jpeg"
-              alt="Aztecas 2026 Summer Champions — team with trophy, third straight title"
-              className="w-full h-[280px] sm:h-[360px] md:h-full object-cover"
-              loading="eager"
-            />
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-              <p className="text-[11px] font-black tracking-[0.14em] text-amber-300 text-center">AZTECAS - 2-1 OVER ARABES - AUG 23, 2026</p>
-            </div>
           </div>
         </div>
       </div>
@@ -217,8 +178,25 @@ export default function Schedule() {
         <SponsorBanner compact />
       </div>
 
-      {/* Schedule — Week Cards (Mon-Sun) */}
+      {displaySchedule.length === 0 && (
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+          <div className="p-6 sm:p-8 text-center">
+            <div className="text-[11px] font-black tracking-[0.16em] text-gold">FALL/WINTER 2026</div>
+            <h2 className="font-display font-black text-navy text-xl mt-2">Schedule drops after tryouts</h2>
+            <p className="text-sm text-navy/60 mt-2 max-w-[480px] mx-auto leading-relaxed">
+              Games begin October 31st — Saturday mornings at Stark, Sunflower & IVC.
+              Lock in your spot at tryouts, Oct 17 @ Sunflower Field.
+            </p>
+            <div className="flex gap-2 mt-5 justify-center flex-wrap">
+              <Link to="/tryouts" className="px-5 py-2.5 rounded-full bg-navy text-white text-sm font-black hover:bg-navy-deep transition">Save my spot — $10</Link>
+              <Link to="/past-seasons" className="px-5 py-2.5 rounded-full bg-white border border-navy/15 text-navy text-sm font-semibold hover:bg-cream transition">Past seasons</Link>
+            </div>
+          </div>
+        </div>
+      )}
+      {displaySchedule.length > 0 && (
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+        {/* Schedule — Week Cards */}
         <div className="px-5 sm:px-6 py-4 border-b bg-gradient-to-r from-navy to-navy-mid flex flex-wrap gap-3 items-center justify-between">
           <h2 className="font-display font-bold text-white text-lg">Schedule • Mon — Sun</h2>
           <div className="flex flex-wrap items-center gap-2 text-[11px]">
@@ -316,6 +294,7 @@ export default function Schedule() {
           })}
         </div>
       </div>
+      )}
       {showJump && nextDisplayIndex !== -1 && (
         <button
           onClick={jumpToNext}

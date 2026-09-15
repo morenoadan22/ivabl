@@ -88,7 +88,7 @@ export default function TeamPage() {
             {team.manager && <div className="text-white/80 text-sm mt-1">Manager: {team.managerUrl ? <a href={team.managerUrl} target="_blank" rel="noreferrer" className="underline text-gold">{team.manager}</a> : team.manager}</div>}
           </div>
           <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-white/70">
-            <span className="px-3 py-1.5 rounded-full bg-white/15">2026 SUMMER</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/15">2026 FALL/WINTER</span>
             <span className="px-3 py-1.5 rounded-full bg-gold text-navy">WOOD BAT</span>
           </div>
         </div>

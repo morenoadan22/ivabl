@@ -1,6 +1,52 @@
-// Current season: Fall/Winter 2026. Teams are added here as rosters are finalized.
-// Summer 2026 final data lives frozen in src/data/archive/summer2026Teams.js.
-export const teams = [];
+// ARCHIVE — Summer 2026 season. Frozen snapshot; do not edit.
+// Current season lives in src/data/teams.js.
+export const teams = [
+  {
+    slug: "aztecas",
+    name: "Aztecas",
+    image: "/img/team/aztecas.jpg",
+    imageAlt: "/img/team/aztecas_championship.jpeg",
+    manager: null,
+  },
+  {
+    slug: "bullies",
+    name: "Bullies",
+    image: "/img/team/bullies.jpg",
+    imageAlt: null,
+  },
+  {
+    slug: "hot_shotz",
+    name: "Hot Shotz",
+    image: "/img/team/hot_shotz_summer26.jpeg",
+    imageAlt: "/img/team/hot_shotz.jpeg",
+  },
+  {
+    slug: "sandlot",
+    name: "Sandlot",
+    image: "/img/team/sandlot.jpg",
+    imageAlt: null,
+  },
+  {
+    slug: "arabes",
+    name: "Arabes",
+    image: "/img/team/arabes_summer_26.jpeg",
+    imageAlt: null,
+    manager: "Victor Benitez",
+    managerUrl: "https://www.facebook.com/vabenitez10",
+  },
+  {
+    slug: "outlaws",
+    name: "Outlaws",
+    image: "/img/team/wolves.jpg",
+    imageAlt: null,
+  },
+  {
+    slug: "los_gringos",
+    name: "Los Gringos",
+    image: "/img/team/gringos_summer26.jpeg",
+    imageAlt: null,
+  },
+];
 
 export function getTeamBySlug(slug) {
   return teams.find(t => t.slug === slug);

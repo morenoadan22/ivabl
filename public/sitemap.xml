@@ -6,6 +6,7 @@
   <url><loc>https://www.ivabl.com/live</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.ivabl.com/sponsors</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.ivabl.com/locations</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.ivabl.com/past-seasons</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.ivabl.com/rules</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.ivabl.com/team/aztecas</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.ivabl.com/team/bullies</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
