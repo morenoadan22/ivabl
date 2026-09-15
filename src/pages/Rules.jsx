@@ -1,10 +1,13 @@
 export default function Rules() {
   const rules = [
-    { title: "First pitch 7:00 PM", desc: "All games start at 7:00 PM sharp. Arrive early for warmups and lineup exchange." },
+    { title: "Saturday mornings — 9:00 & 12:30", desc: "Games start at 9:00 AM and 12:30 PM. 15-minute grace period — games begin 9:15 / 12:45 at the latest." },
     { title: "8-game regular season", desc: "Each team plays 8 games before playoffs." },
     { title: "Wood bats — NO EXCEPTIONS", desc: "Composite and metal bats are not permitted. Bring your own wood bats." },
     { title: "Home team keeps book", desc: "Home team is responsible for GameChanger scoring and setting lineups (Away vs. Home)." },
     { title: "9 innings or 2.5 hours", desc: "No new inning after the time limit." },
+    { title: "7+ players to start", desc: "Minimum seven players to begin a game. Ghost out the first time through the lineup." },
+    { title: "Mercy rule", desc: "15 runs after 5 innings, 10 runs after 7 innings." },
+    { title: "Suspended mid-inning", desc: "If a game ends in the middle of an inning, the score reverts to the start of the last completed inning." },
     { title: "Top 5 → playoffs", desc: "Top five teams by standings qualify." },
     { title: "3-game eligibility", desc: "Players need 3 regular-season games to be playoff-eligible." },
     { title: "Roster lock", desc: "Playoff rosters are locked after the final regular-season game." },
