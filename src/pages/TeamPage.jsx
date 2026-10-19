@@ -85,17 +85,29 @@ export default function TeamPage() {
         <div className="bg-gradient-to-r from-navy to-navy-mid px-6 py-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
           <div>
             <h1 className="font-display font-black text-white text-[28px] tracking-tight">⚾ {team.name}</h1>
-            {team.manager && <div className="text-white/80 text-sm mt-1">Manager: {team.managerUrl ? <a href={team.managerUrl} target="_blank" rel="noreferrer" className="underline text-gold">{team.manager}</a> : team.manager}</div>}
+            {team.manager && (
+              <div className="text-white/80 text-sm mt-2 flex items-center gap-2">
+                {team.managerImage ? (
+                  <img src={team.managerImage} alt={team.manager} className="h-8 w-8 rounded-full object-cover ring-2 ring-gold" />
+                ) : (
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-navy text-xs font-black ring-2 ring-white/30" aria-hidden="true">
+                    {team.manager.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                  </span>
+                )}
+                <span>Manager: {team.managerUrl ? <a href={team.managerUrl} target="_blank" rel="noreferrer" className="underline text-gold">{team.manager}</a> : team.manager}</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-white/70">
             <span className="px-3 py-1.5 rounded-full bg-white/15">2026 FALL/WINTER</span>
-            <span className="px-3 py-1.5 rounded-full bg-gold text-navy">WOOD BAT</span>
           </div>
         </div>
 
+        {team.image && (
         <div className="p-6 flex justify-center bg-cream/40">
           <img src={team.image} alt={`${team.name} logo`} className="w-full max-w-[320px] rounded-2xl shadow bg-white object-cover aspect-[4/3]" />
         </div>
+        )}
 
         <div className="px-6 py-6">
           <h2 className="font-display font-bold text-navy text-lg mb-3">Games</h2>

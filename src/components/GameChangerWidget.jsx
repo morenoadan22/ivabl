@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const WIDGET_SRC = "https://widgets.gc.com/static/js/sdk.v1.js";
-const WIDGET_ID = "394d13f8-9e99-4e33-998f-80b411ef9d8c";
-const TARGET_ID = "gc-scoreboard-widget-su90";
+const WIDGET_ID = "97a94eab-7988-4c0b-80f2-96fe00aa736b";
+const TARGET_ID = "gc-scoreboard-widget-v2jp";
 
 function loadScript() {
   return new Promise((resolve, reject) => {

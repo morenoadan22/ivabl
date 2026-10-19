@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { schedule, mapTeamNameToPage, isPlayoffWeek, isSeededPlaceholder } from "../data/schedule.js";
 import { getTeamByName } from "../data/teams.js";
 import GameChangerWidget from "../components/GameChangerWidget.jsx";
@@ -23,7 +23,7 @@ function TeamLink({ name, scorePrefix, isWinner, isLoser, isTie }) {
   );
 }
 
-function GameLine({ game }) {
+function GameLine({ game, showMeta = true }) {
   const hs = game.result?.home;
   const as = game.result?.away;
   const hasResult = hs !== undefined && as !== undefined;
@@ -35,14 +35,15 @@ function GameLine({ game }) {
 
   if (hasResult) {
     return (
-      <div className="rounded-lg bg-black/[0.03] border border-black/5 px-2.5 py-2 min-w-0 overflow-hidden">
+      <div className="rounded-lg bg-black/[0.03] border border-black/5 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center">
+        {showMeta && (
         <div className="flex flex-wrap items-center gap-1.5 mb-1">
           <span className="text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded bg-navy text-white shrink-0">FINAL</span>
           <span className="text-[11px] font-medium text-navy/50 shrink-0">{game.date}</span>
-          <div className="w-full flex justify-start">
-            <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-white border border-black/5 text-navy/60 hover:bg-navy hover:text-white transition">@{game.location}</Link>
-          </div>
+          {game.time && <span className="text-[11px] font-black px-1.5 py-0.5 rounded bg-gold text-navy shrink-0">{game.time}</span>}
+          <Link to="/locations" className="text-[11px] font-black px-1.5 py-0.5 rounded bg-white border border-black/5 text-navy hover:bg-navy hover:text-white transition shrink-0">@{game.location}</Link>
         </div>
+        )}
         <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words">
           <TeamLink name={game.away} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
           <span className="text-navy/30 text-xs">vs.</span>
@@ -54,14 +55,15 @@ function GameLine({ game }) {
   }
 
   return (
-    <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden">
+    <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center">
+      {showMeta && (
       <div className="flex flex-wrap items-center gap-1.5 mb-1">
         <span className="text-[10px] font-black tracking-widest px-1 py-0.5 rounded bg-gold text-navy shrink-0">UPCOMING</span>
         <span className="text-[11px] font-bold text-navy/60 shrink-0">{game.date}</span>
-        <div className="w-full flex justify-start">
-          <Link to="/locations" className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-white border border-amber-200 text-navy/70 hover:bg-navy hover:text-white transition">@{game.location}</Link>
-        </div>
+        {game.time && <span className="text-[11px] font-black px-1.5 py-0.5 rounded bg-navy text-white shrink-0">{game.time}</span>}
+        <Link to="/locations" className="text-[11px] font-black px-1.5 py-0.5 rounded bg-white border border-amber-200 text-navy hover:bg-navy hover:text-white transition shrink-0">@{game.location}</Link>
       </div>
+      )}
       <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words font-medium">
         <TeamLink name={game.away} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
         <span className="text-navy/40 text-xs">vs.</span>
@@ -72,8 +74,92 @@ function GameLine({ game }) {
   );
 }
 
+const SLOT_ORDER = ["9:00 AM", "12:30 PM"];
+
+function groupGamesByTime(games) {
+  const groups = [];
+  for (const g of games) {
+    const key = g.time || "Time TBD";
+    let group = groups.find((x) => x.key === key);
+    if (!group) {
+      group = { key, games: [] };
+      groups.push(group);
+    }
+    group.games.push(g);
+  }
+  const rank = (k) => {
+    const i = SLOT_ORDER.indexOf(k);
+    return i === -1 ? SLOT_ORDER.length : i;
+  };
+  groups.sort((a, b) => rank(a.key) - rank(b.key) || a.key.localeCompare(b.key));
+  return groups;
+}
+
+const FIELD_ORDER = ["Stark", "Sunflower", "Central", "Calexico"];
+
+function FieldMatrix({ games }) {
+  const slots = groupGamesByTime(games);
+  const fields = [...new Set(games.map((g) => g.location))].sort((a, b) => {
+    const ia = FIELD_ORDER.indexOf(a);
+    const ib = FIELD_ORDER.indexOf(b);
+    return (ia === -1 ? FIELD_ORDER.length : ia) - (ib === -1 ? FIELD_ORDER.length : ib);
+  });
+  const gameAt = (field, slot) => games.find((g) => g.location === field && (g.time || "Time TBD") === slot);
+  const stacked = (
+    <div className="sm:hidden space-y-4">
+      {slots.map((s) => (
+        <div key={s.key}>
+          <span className="inline-flex px-3 py-1 rounded-full bg-navy text-white text-[12px] font-black tracking-widest">{s.key.toUpperCase()}</span>
+          <div className="space-y-2 mt-2">
+            {s.games.map((g, idx) => (
+              <GameLine key={idx} game={g} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+  return (
+    <>
+    {stacked}
+    <div className="hidden sm:block overflow-x-auto">
+      <div
+        className="grid gap-2.5 min-w-[640px]"
+        style={{ gridTemplateColumns: `128px repeat(${slots.length}, minmax(0, 1fr))` }}
+      >
+        <div />
+        {slots.map((s) => (
+          <div key={s.key} className="flex items-center px-1">
+            <span className="inline-flex px-3 py-1 rounded-full bg-navy text-white text-[12px] font-black tracking-widest">{s.key.toUpperCase()}</span>
+          </div>
+        ))}
+        {fields.map((field) => (
+          <Fragment key={field}>
+            <Link
+              to="/locations"
+              className="flex items-center rounded-xl bg-navy px-3 py-2 text-[12px] font-black text-white hover:bg-navy-deep transition self-stretch"
+            >
+              @{field}
+            </Link>
+            {slots.map((s) => {
+              const g = gameAt(field, s.key);
+              return g ? (
+                <GameLine key={s.key} game={g} showMeta={false} />
+              ) : (
+                <div key={s.key} className="rounded-lg border border-dashed border-black/10 bg-black/[0.02] flex items-center justify-center">
+                  <span className="text-navy/20 text-sm">—</span>
+                </div>
+              );
+            })}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+    </>
+  );
+}
+
 export default function Schedule() {
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const [isReversed, setIsReversed] = useState(false);
   const weekRefs = useRef([]);
   const [showJump, setShowJump] = useState(true);
@@ -171,7 +257,7 @@ export default function Schedule() {
       <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
         {/* Schedule — Week Cards */}
         <div className="px-5 sm:px-6 py-4 border-b bg-gradient-to-r from-navy to-navy-mid flex flex-wrap gap-3 items-center justify-between">
-          <h2 className="font-display font-bold text-white text-lg">Schedule • Mon — Sun</h2>
+          <h2 className="font-display font-bold text-white text-lg">Schedule • Saturdays</h2>
           <div className="flex flex-wrap items-center gap-2 text-[11px]">
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Winner</span>
             <span className="inline-flex items-center gap-1.5 bg-white/15 text-white px-2.5 py-1 rounded-full"><span className="h-2 w-2 rounded-full bg-red-400" /> Loss</span>
@@ -215,51 +301,12 @@ export default function Schedule() {
                     </div>
                     <span className="text-xs font-medium text-white/70">
                       {week.games.length} {week.games.length === 1 ? "game" : "games"}
-                      {hasGames && ` • ${[...new Set(week.games.map(g=>g.dayOfWeek))].join(" • ")}`}
+                      {hasGames && week.games[0]?.date && ` • Sat ${week.games[0].date}`}
                     </span>
                   </div>
 
                   <div className="p-3 sm:p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2.5">
-                      {days.map(day => {
-                        const games = week.games.filter(g => g.dayOfWeek === day);
-                        const isEmpty = games.length === 0;
-                        return (
-                          <div
-                            key={day}
-                            className={`rounded-xl border p-2.5 flex-col min-h-[84px] min-w-0 overflow-hidden ${
-                              isEmpty
-                                ? "hidden lg:flex bg-black/[0.02] border-dashed border-black/10"
-                                : "flex bg-white border-black/5 shadow-sm"
-                            }`}
-                          >
-                            <div className={`text-[11px] font-black tracking-widest mb-1.5 ${isEmpty ? "text-navy/30" : "text-navy/50"}`}>
-                              <span>{day.slice(0, 3).toUpperCase()}</span>
-                            </div>
-                            {isEmpty ? (
-                              <span className="text-xs text-navy/20 mt-1">—</span>
-                            ) : (
-                              <div className="space-y-2">
-                                {games.map((g, idx) => (
-                                  <GameLine key={idx} game={g} />
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {/* Handle any games with non-standard day (fallback) */}
-                    {week.games.filter(g => !days.includes(g.dayOfWeek)).length > 0 && (
-                      <div className="mt-2.5 rounded-xl border border-amber-200 bg-amber-50 p-2.5">
-                        <div className="text-[11px] font-black tracking-widest text-amber-800 mb-1">OTHER</div>
-                        <div className="space-y-2">
-                          {week.games.filter(g => !days.includes(g.dayOfWeek)).map((g, idx) => (
-                            <GameLine key={`other-${idx}`} game={g} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    <FieldMatrix games={week.games} />
                   </div>
                 </div>
               </div>

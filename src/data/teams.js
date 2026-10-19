@@ -1,6 +1,85 @@
 // Current season: Fall/Winter 2026. Teams are added here as rosters are finalized.
 // Summer 2026 final data lives frozen in src/data/archive/summer2026Teams.js.
-export const teams = [];
+export const teams = [
+  {
+    slug: "aztecas",
+    name: "Aztecas",
+    image: "/img/team/aztecas.jpg",
+    imageAlt: "/img/team/aztecas_championship.jpeg",
+    manager: "Sergio Ramirez",
+    managerUrl: "https://www.facebook.com/sergio.ramirez.3781",
+  },
+  {
+    slug: "hot_shotz",
+    name: "Hot Shotz",
+    image: "/img/team/hot_shotz_summer26.jpeg",
+    imageAlt: "/img/team/hot_shotz.jpeg",
+    manager: "Ridge McCurry",
+    managerUrl: "https://www.facebook.com/ridge.mccurry",
+  },
+  {
+    slug: "sandlot",
+    name: "Sandlot",
+    image: "/img/team/sandlot.jpg",
+    imageAlt: null,
+    manager: "Fonzie Ruiz",
+    managerUrl: "https://www.facebook.com/FonzieRuiz",
+  },
+  {
+    slug: "sbc",
+    name: "SBC",
+    image: "/img/team/sbc.jpeg",
+    imageAlt: null,
+    manager: "Tanner Holt",
+    managerUrl: "https://www.facebook.com/tanner.holt.560",
+  },
+  {
+    slug: "calexico_baseball",
+    name: "Calexico Baseball",
+    image: null,
+    imageAlt: null,
+    manager: "Luis Briseño",
+    managerUrl: "https://www.facebook.com/luis.briseno.52",
+  },
+  {
+    slug: "outlaws",
+    name: "Outlaws",
+    image: "/img/team/wolves.jpg",
+    imageAlt: null,
+    manager: "Nathan Gasca",
+    managerUrl: "https://www.facebook.com/nathan.gasca",
+  },
+  {
+    slug: "los_gringos",
+    name: "Los Gringos",
+    image: "/img/team/gringos_summer26.jpeg",
+    imageAlt: null,
+    manager: "Israel Garza",
+    managerUrl: "https://www.facebook.com/israel.garza.7165",
+  },
+  {
+    slug: "dawgz",
+    name: "Dawgz",
+    image: null,
+    imageAlt: null,
+    manager: "Danny Flores",
+    managerUrl: "https://www.facebook.com/danny.flores.92102",
+  },
+  {
+    slug: "arabes",
+    name: "Arabes",
+    image: "/img/team/arabes_summer_26.jpeg",
+    imageAlt: null,
+    manager: "Victor Benitez",
+    managerUrl: "https://www.facebook.com/vabenitez10",
+  },
+  {
+    slug: "impact",
+    name: "Impact",
+    image: null,
+    imageAlt: null,
+  },
+];
 
 export function getTeamBySlug(slug) {
   return teams.find(t => t.slug === slug);
