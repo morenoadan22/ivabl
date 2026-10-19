@@ -13,13 +13,11 @@ const moreNav = [
   { to: "/locations", label: "Locations" },
   { to: "/past-seasons", label: "Past Seasons" },
 ];
-const tryoutsLink = { to: "/tryouts", label: "Tryouts • $10" };
 const FACEBOOK_URL = "https://www.facebook.com/groups/538464853381722";
 
 const pillBase = "inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition";
 const pillIdle = "text-white/70 hover:text-white hover:bg-white/10";
 const pillActive = "bg-white text-navy shadow";
-const pillTryouts = "bg-amber-300 text-navy hover:bg-amber-200 shadow-sm";
 
 function LiveDot() {
   return <span className="h-2 w-2 rounded-full bg-red-500 shadow shadow-red-500/30" />;
@@ -58,21 +56,6 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Tryouts announcement — sitewide (from flyer) */}
-      <div className="bg-amber-300 text-navy text-[12px] sm:text-[13px] font-semibold">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2">
-          <span className="flex items-center gap-2">
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-navy text-amber-300 text-[10px] font-black">!</span>
-            <span className="font-black tracking-wide">TRYOUTS — $10</span>
-            <span className="hidden sm:inline font-medium text-navy/70">Oct 17 • 9–11 AM</span>
-            <span className="hidden lg:inline font-medium text-navy/70">• Sunflower Field</span>
-            <span className="hidden xl:inline font-medium text-navy/50">• $10 → $50 team fee if selected</span>
-          </span>
-          <Link to="/tryouts" className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition shrink-0">
-            Sign up & pay →
-          </Link>
-        </div>
-      </div>
       {/* Top bar */}
       <header className="sticky top-0 z-40 backdrop-blur bg-navy-deep/90 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between gap-3">
@@ -131,10 +114,6 @@ export default function Layout({ children }) {
                 )}
               </div>
             </nav>
-            {/* Pinned CTA — never scrolls out of view */}
-            <NavLink to={tryoutsLink.to} className={`${pillBase} ${pillTryouts}`}>
-              {tryoutsLink.label}
-            </NavLink>
             <a href={FACEBOOK_URL} target="_blank" rel="noreferrer" aria-label="Facebook group" title="Facebook group" className="inline-flex items-center justify-center h-9 w-9 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition shrink-0">
               <img src="/facebook-icon.png" alt="" className="h-4 w-4 opacity-90" />
             </a>
@@ -142,9 +121,6 @@ export default function Layout({ children }) {
 
           {/* Tablet/mobile — pinned CTA + hamburger */}
           <div className="flex lg:hidden items-center gap-2">
-            <NavLink to={tryoutsLink.to} className="inline-flex items-center px-3.5 py-2 rounded-full bg-amber-300 text-navy text-[13px] font-bold hover:bg-amber-200 transition whitespace-nowrap shadow-sm">
-              {tryoutsLink.label}
-            </NavLink>
             <button
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
