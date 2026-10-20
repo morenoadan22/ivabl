@@ -1,8 +1,43 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { schedule, mapTeamNameToPage } from "../data/schedule.js";
-import { getTeamBySlug } from "../data/teams.js";
+import { getTeamBySlug, locationMeta } from "../data/teams.js";
 import rosters from "../data/rosters.json";
+
+function ManagerAvatar({ m }) {
+  if (m.image) {
+    return <img src={m.image} alt={m.name} className="h-8 w-8 rounded-full object-cover ring-2 ring-gold" />;
+  }
+  return (
+    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-navy text-xs font-black ring-2 ring-white/30" aria-hidden="true">
+      {m.name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+    </span>
+  );
+}
+
+function ManagerLine({ team }) {
+  const managers = [
+    { name: team.manager, url: team.managerUrl, image: team.managerImage },
+    { name: team.manager2, url: team.manager2Url, image: team.manager2Image },
+  ].filter((m) => m.name);
+  if (managers.length === 0) return null;
+  return (
+    <div className="text-white/80 text-sm mt-2 flex items-center gap-2">
+      <span className="flex -space-x-2">
+        {managers.map((m) => <ManagerAvatar key={m.name} m={m} />)}
+      </span>
+      <span>
+        {managers.length > 1 ? "Managers: " : "Manager: "}
+        {managers.map((m, i) => (
+          <span key={m.name}>
+            {i > 0 && (i === managers.length - 1 ? " & " : ", ")}
+            {m.url ? <a href={m.url} target="_blank" rel="noreferrer" className="underline text-gold">{m.name}</a> : m.name}
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
 
 function parseStatsForTeam(csvData, teamName) {
   // simplified: use processTeamStats logic from original team_page.js
@@ -47,6 +82,94 @@ function parseStatsForTeam(csvData, teamName) {
   return map;
 }
 
+const SEASON_YEAR = 2026;
+const GAME_HOURS = 2;
+
+function parseGameStart(game) {
+  if (!game.date || !game.time) return null;
+  const [m, d] = game.date.split("/").map(Number);
+  const mt = game.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m || !d || !mt) return null;
+  let h = Number(mt[1]) % 12;
+  if (/pm/i.test(mt[3])) h += 12;
+  const start = new Date(SEASON_YEAR, m - 1, d, h, Number(mt[2]), 0);
+  if (isNaN(start.getTime())) return null;
+  return start;
+}
+
+function toStamp(dt) {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${dt.getFullYear()}${p(dt.getMonth() + 1)}${p(dt.getDate())}T${p(dt.getHours())}${p(dt.getMinutes())}00`;
+}
+
+function gameLocation(game) {
+  const meta = locationMeta[game.location];
+  return meta ? `${meta.name}, ${meta.address}` : game.location;
+}
+
+function icsEscape(s) {
+  return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+}
+
+function gameTitle(game, teamName) {
+  const opp = game.home === teamName ? game.away : game.home;
+  const vs = game.home === teamName ? "vs." : "@";
+  return `${teamName} ${vs} ${opp} (IVABL)`;
+}
+
+function googleCalUrl(game, teamName) {
+  const start = parseGameStart(game);
+  if (!start) return null;
+  const end = new Date(start.getTime() + GAME_HOURS * 3600e3);
+  const q = new URLSearchParams({
+    action: "TEMPLATE",
+    text: gameTitle(game, teamName),
+    dates: `${toStamp(start)}/${toStamp(end)}`,
+    details: `IVABL Fall/Winter 2026 - Week ${game.week}`,
+    location: gameLocation(game),
+  });
+  return `https://calendar.google.com/calendar/render?${q.toString()}`;
+}
+
+function downloadSeasonICS(games, teamName, slug) {
+  const timed = games.map((g) => ({ g, start: parseGameStart(g) })).filter((x) => x.start);
+  if (timed.length === 0) return;
+  const stamp = toStamp(new Date()).replace(/(\d{4})(\d{2})(\d{2})T/, "$1$2$3T");
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//IVABL//Schedule//EN"];
+  timed.forEach(({ g, start }, i) => {
+    const end = new Date(start.getTime() + GAME_HOURS * 3600e3);
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${slug}-w${g.week}-${i}@ivabl.com`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${toStamp(start)}`,
+      `DTEND:${toStamp(end)}`,
+      `SUMMARY:${icsEscape(gameTitle(g, teamName))}`,
+      `LOCATION:${icsEscape(gameLocation(g))}`,
+      `DESCRIPTION:${icsEscape(`IVABL Fall/Winter 2026 - Week ${g.week}`)}`,
+      "END:VEVENT"
+    );
+  });
+  lines.push("END:VCALENDAR");
+  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${slug}-fall-2026.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+function CalendarIcon() {
+  return (
+    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="1.5" y="2.5" width="13" height="12" rx="2" />
+      <path d="M1.5 6.5h13M5 1v3M11 1v3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function TeamPage() {
   const { slug } = useParams();
   const team = getTeamBySlug(slug);
@@ -85,18 +208,7 @@ export default function TeamPage() {
         <div className="bg-gradient-to-r from-navy to-navy-mid px-6 py-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
           <div>
             <h1 className="font-display font-black text-white text-[28px] tracking-tight">⚾ {team.name}</h1>
-            {team.manager && (
-              <div className="text-white/80 text-sm mt-2 flex items-center gap-2">
-                {team.managerImage ? (
-                  <img src={team.managerImage} alt={team.manager} className="h-8 w-8 rounded-full object-cover ring-2 ring-gold" />
-                ) : (
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-navy text-xs font-black ring-2 ring-white/30" aria-hidden="true">
-                    {team.manager.split(" ").map((w) => w[0]).slice(0, 2).join("")}
-                  </span>
-                )}
-                <span>Manager: {team.managerUrl ? <a href={team.managerUrl} target="_blank" rel="noreferrer" className="underline text-gold">{team.manager}</a> : team.manager}</span>
-              </div>
-            )}
+            <ManagerLine team={team} />
           </div>
           <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-white/70">
             <span className="px-3 py-1.5 rounded-full bg-white/15">2026 FALL/WINTER</span>
@@ -110,14 +222,26 @@ export default function TeamPage() {
         )}
 
         <div className="px-6 py-6">
-          <h2 className="font-display font-bold text-navy text-lg mb-3">Games</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h2 className="font-display font-bold text-navy text-lg">Games</h2>
+            {games.some((g) => parseGameStart(g)) && (
+              <button
+                type="button"
+                onClick={() => downloadSeasonICS(games, teamName, slug)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-navy text-white text-xs font-bold hover:bg-navy-deep transition"
+                title="Download all games as a calendar file (works with Apple Calendar and Google Calendar)"
+              >
+                <CalendarIcon /> Add to Calendar
+              </button>
+            )}
+          </div>
           <div className="overflow-x-auto rounded-xl border border-black/5">
             <table className="w-full text-sm">
               <thead className="bg-navy text-white text-xs tracking-widest">
-                <tr><th className="text-left px-3 py-2">Week</th><th className="text-left px-3 py-2">Date</th><th className="text-left px-3 py-2">Opponent</th><th className="text-left px-3 py-2">Location</th><th className="text-left px-3 py-2">Result</th></tr>
+                <tr><th className="text-left px-3 py-2">Week</th><th className="text-left px-3 py-2">Date</th><th className="text-left px-3 py-2">Time</th><th className="text-left px-3 py-2">Opponent</th><th className="text-left px-3 py-2">Location</th><th className="text-left px-3 py-2">Result</th></tr>
               </thead>
               <tbody>
-                {games.length===0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-navy/50">No games found.</td></tr>}
+                {games.length===0 && <tr><td colSpan={6} className="px-4 py-8 text-center text-navy/50">No games found.</td></tr>}
                 {games.map((g, idx)=>{
                   const isHome = g.home===teamName;
                   const opp = isHome ? g.away : g.home;
@@ -134,6 +258,19 @@ export default function TeamPage() {
                     <tr key={idx} className="border-t border-black/5 hover:bg-cream/30">
                       <td className="px-3 py-2 font-mono text-xs">{g.week}</td>
                       <td className="px-3 py-2">{g.dayOfWeek} {g.date}</td>
+                      <td className="px-3 py-2 font-semibold whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1.5">
+                          {g.time || <span className="text-navy/40">—</span>}
+                          {(() => {
+                            const url = googleCalUrl(g, teamName);
+                            return url ? (
+                              <a href={url} target="_blank" rel="noreferrer" title="Add to Google Calendar" className="text-navy/40 hover:text-navy transition">
+                                <CalendarIcon />
+                              </a>
+                            ) : null;
+                          })()}
+                        </span>
+                      </td>
                       <td className="px-3 py-2"><span className="text-navy/60 mr-1">{isHome?"vs.":"@"}</span><Link to={`/team/${mapTeamNameToPage(opp)}`} className="font-semibold text-navy hover:underline">{opp}</Link></td>
                       <td className="px-3 py-2"><Link to="/locations" className="text-navy hover:underline">{g.location}</Link></td>
                       <td className="px-3 py-2">{result || <span className="text-navy/40">—</span>}</td>

@@ -3,14 +3,18 @@
 export const teams = [
   {
     slug: "aztecas",
+    division: "AA",
     name: "Aztecas",
     image: "/img/team/aztecas.jpg",
     imageAlt: "/img/team/aztecas_championship.jpeg",
     manager: "Sergio Ramirez",
     managerUrl: "https://www.facebook.com/sergio.ramirez.3781",
+    manager: "Adan Moreno",
+    managerUrl: "https://www.facebook.com/morenoadan22/",
   },
   {
     slug: "hot_shotz",
+    division: "A",
     name: "Hot Shotz",
     image: "/img/team/hot_shotz_summer26.jpeg",
     imageAlt: "/img/team/hot_shotz.jpeg",
@@ -19,6 +23,7 @@ export const teams = [
   },
   {
     slug: "sandlot",
+    division: "A",
     name: "Sandlot",
     image: "/img/team/sandlot.jpg",
     imageAlt: null,
@@ -27,14 +32,18 @@ export const teams = [
   },
   {
     slug: "sbc",
+    division: "AA",
     name: "SBC",
     image: "/img/team/sbc.jpeg",
     imageAlt: null,
     manager: "Tanner Holt",
     managerUrl: "https://www.facebook.com/tanner.holt.560",
+    manager2: "Robert Cruz",
+    manager2Url: "https://www.facebook.com/robert.cruz.7",
   },
   {
     slug: "calexico_baseball",
+    division: "AA",
     name: "Calexico Baseball",
     image: null,
     imageAlt: null,
@@ -43,6 +52,7 @@ export const teams = [
   },
   {
     slug: "outlaws",
+    division: "A",
     name: "Outlaws",
     image: "/img/team/wolves.jpg",
     imageAlt: null,
@@ -51,6 +61,7 @@ export const teams = [
   },
   {
     slug: "los_gringos",
+    division: "A",
     name: "Los Gringos",
     image: "/img/team/gringos_summer26.jpeg",
     imageAlt: null,
@@ -59,6 +70,7 @@ export const teams = [
   },
   {
     slug: "dawgz",
+    division: "A",
     name: "Dawgz",
     image: null,
     imageAlt: null,
@@ -67,6 +79,7 @@ export const teams = [
   },
   {
     slug: "arabes",
+    division: "AA",
     name: "Arabes",
     image: "/img/team/arabes_summer_26.jpeg",
     imageAlt: null,
@@ -75,6 +88,7 @@ export const teams = [
   },
   {
     slug: "impact",
+    division: "AA",
     name: "Impact",
     image: null,
     imageAlt: null,
