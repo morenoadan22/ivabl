@@ -13,6 +13,13 @@ export const sponsors = [
     tier: "Gold",
     url: "https://driscolls.net/",
   },
+  {
+    name: "Retrofit AI Consulting",
+    logo: "/img/sponsors/retrofit_ai_banner.png",
+    banner: "/img/sponsors/retrofit_ai_banner.png",
+    tier: "Gold",
+    url: "https://www.retrofitai.net/",
+  },
 ];
 
 export const tiers = [
