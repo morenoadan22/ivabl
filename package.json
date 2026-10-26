@@ -8,7 +8,14 @@
     "build": "vite build",
     "lint": "oxlint",
     "verify": "node scripts/verify-schedule.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api": "node --env-file=server/.env server/index.js",
+    "umpire:sync": "node --env-file=server/.env scripts/sync-games.mjs",
+    "umpire:create": "node --env-file=server/.env scripts/create-umpire.mjs",
+    "season:import-teams": "node --env-file=server/.env scripts/import-teams.mjs",
+    "season:import-rosters": "node --env-file=server/.env scripts/import-rosters.mjs",
+    "season:import-stats": "node --env-file=server/.env scripts/import-stats.mjs",
+    "season:record-score": "node --env-file=server/.env scripts/record-score.mjs"
   },
   "dependencies": {
     "qrcode.react": "^4.2.0",

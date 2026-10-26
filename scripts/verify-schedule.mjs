@@ -1,7 +1,10 @@
 // Verifies Fall/Winter 2026 scheduling rules. Run: npm run verify
-// Rules: intra-division only; 8 games/team; 4H/4A; SBC hosts at Central,
-// Calexico Baseball hosts at Calexico (home team hosts when they meet);
-// no other team uses those fields; no field+time clashes; max 2 games/team/week.
+// Rules: same-tier pairs meet at most once; 5 games/week (6 in week 5 for
+// the Friday IVC doubleheader); 8 games/team (guests exempt); 4H/4A;
+// Calexico Baseball always 9:00 AM; Aztecas/SBC never share a window
+// (same day); SBC hosts at Central, Calexico Baseball hosts at Calexico
+// (home team hosts when they meet); no other team uses those fields;
+// no field+date+time clashes.
 import { schedule } from "../src/data/schedule.js";
 import { teams, locationMeta } from "../src/data/teams.js";
 
@@ -9,6 +12,7 @@ const byName = Object.fromEntries(teams.map((t) => [t.name, t]));
 const failures = [];
 const ok = (cond, msg) => { if (!cond) failures.push(msg); };
 
+const GUESTS = new Set(teams.filter((t) => t.guest).map((t) => t.name));
 const gp = {}, ha = {}, pairMeetings = {}, sameTierPairs = {};
 for (const t of teams) { gp[t.name] = 0; ha[t.name + "|H"] = 0; ha[t.name + "|A"] = 0; }
 
@@ -16,22 +20,23 @@ schedule.forEach((week, wi) => {
   const w = `week ${week.week}`;
   const seen = new Set(), slots = new Set();
   for (const g of week.games) {
+    const isGuestGame = GUESTS.has(g.away) || GUESTS.has(g.home);
     for (const [side, key] of [["away", g.away], ["home", g.home]]) {
       ok(byName[key], `${w}: unknown team ${key}`);
-      ok(!seen.has(key + "@" + g.time), `${w}: ${key} plays twice at ${g.time}`);
+      ok(!seen.has(key + "@" + g.date + g.time), `${w}: ${key} plays twice at ${g.time} on ${g.date}`);
       ok([...seen].filter((s) => s.startsWith(key + "@")).length < 2, `${w}: ${key} plays 3+ games`);
-      seen.add(key + "@" + g.time);
+      seen.add(key + "@" + g.date + g.time);
       gp[key]++;
       ha[key + (side === "home" ? "|H" : "|A")]++;
     }
     const divA = byName[g.away]?.division, divH = byName[g.home]?.division;
-    ok(divA && divH, `${w}: missing skill tier (${g.away} vs ${g.home})`);
+    if (!isGuestGame) ok(divA && divH, `${w}: missing skill tier (${g.away} vs ${g.home})`);
     const pair = [g.away, g.home].sort().join(" v ");
     pairMeetings[pair] = (pairMeetings[pair] || 0) + 1;
-    if (divA === divH) sameTierPairs[pair] = (sameTierPairs[pair] || 0) + 1;
+    if (!isGuestGame && divA === divH) sameTierPairs[pair] = (sameTierPairs[pair] || 0) + 1;
     ok(locationMeta[g.location], `${w}: unknown field ${g.location}`);
-    ok(g.time === "9:00 AM" || g.time === "12:30 PM", `${w}: bad time ${g.time}`);
-    const slot = g.location + "@" + g.time;
+    ok(g.time, `${w}: missing time (${g.away} vs ${g.home})`);
+    const slot = g.date + "|" + g.location + "@" + g.time;
     ok(!slots.has(slot), `${w}: field clash ${slot}`);
     slots.add(slot);
     // venue rules: fixed home fields, home team hosts when they meet
@@ -44,7 +49,9 @@ schedule.forEach((week, wi) => {
 });
 
 for (const w of schedule) {
-  ok(w.games.length === 5, `week ${w.week} has ${w.games.length} games, want 5`);
+  // Week 5 runs six: four Saturday games plus the two Friday IVC games.
+  const want = w.week === 5 ? 6 : 5;
+  ok(w.games.length === want, `week ${w.week} has ${w.games.length} games, want ${want}`);
 }
 
 // Calexico Baseball prefers 9:00 AM games.
@@ -55,9 +62,9 @@ for (const w of schedule) {
   const gc = gameOf("Calexico Baseball");
   if (gc) ok(gc.time === "9:00 AM", `week ${w.week}: Calexico Baseball plays at ${gc.time}`);
   const ga = gameOf("Aztecas"), gs = gameOf("SBC");
-  if (ga && gs && ga !== gs) {
+  if (ga && gs && ga !== gs && ga.date === gs.date) {
     ok(ga.time !== gs.time,
-      `week ${w.week}: Aztecas (${ga.time}) and SBC (${gs.time}) overlap`);
+      `week ${w.week}: Aztecas (${ga.time}) and SBC (${gs.time}) overlap on ${ga.date}`);
   }
 }
 
@@ -66,6 +73,7 @@ for (const [pair, n] of Object.entries(sameTierPairs)) {
 }
 
 for (const t of teams) {
+  if (t.guest) continue; // guest teams play a partial schedule by design
   ok(gp[t.name] === 8, `${t.name} plays ${gp[t.name]} games, want 8`);
   ok(ha[t.name + "|H"] === 4 && ha[t.name + "|A"] === 4,
     `${t.name} home/away ${ha[t.name + "|H"]}/${ha[t.name + "|A"]}, want 4/4`);

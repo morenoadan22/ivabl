@@ -1,4 +1,4 @@
-import { isPlayoffWeek, isSeededPlaceholder } from "../data/schedule.js";
+import { isPlayoffWeek, isSeededPlaceholder } from "./games.js";
 
 export function computeStandings(schedule) {
   const teams = {};

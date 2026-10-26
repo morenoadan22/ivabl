@@ -60,3 +60,6 @@ coverage
 
 # Private docs — bylaws, minutes, EIN letter, SOS filings (contain PII, never commit)
 docs/
+
+# Local umpire database (login code hashes, dev-only data)
+data/

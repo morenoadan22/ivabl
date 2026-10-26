@@ -10,11 +10,11 @@ export const schedule = [
   {
     "week": 1,
     "games": [
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Los Gringos", "location": "Stark" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Los Gringos", "location": "Sunflower" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Hot Shotz", "home": "Dawgz", "location": "Stark" },      
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Impact", "location": "Central" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Arabes", "location": "Calexico" },
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Sandlot", "home": "Outlaws", "location": "Sunflower" }
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Sandlot", "home": "Outlaws", "location": "Stark" }
     ]
   },
   {
@@ -54,7 +54,8 @@ export const schedule = [
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Outlaws", "home": "Impact", "location": "Stark" },
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Los Gringos", "home": "Hot Shotz", "location": "Stark" },
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Dawgz", "home": "Sandlot", "location": "Sunflower" },
-      { "date": "11/28", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Arabes", "home": "Aztecas", "location": "Sunflower" }
+      { "date": "11/27", "dayOfWeek": "Friday", "time": "9:00 AM", "away": "Arabes", "home": "IVC", "location": "IVC" },
+      { "date": "11/27", "dayOfWeek": "Friday", "time": "12:30 PM", "away": "IVC", "home": "Aztecas", "location": "IVC" }
     ]
   },
   {

@@ -4,8 +4,8 @@ export const teams = [
   {
     slug: "aztecas",
     division: "AA",
-    name: "Aztecas",
-    image: "/img/team/aztecas.jpg",
+    name: "Aztecas",    
+    image: "/img/team/aztecas_champs_3x.jpeg",
     imageAlt: "/img/team/aztecas_championship.jpeg",
     manager: "Sergio Ramirez",
     managerUrl: "https://www.facebook.com/sergio.ramirez.3781",
@@ -93,6 +93,14 @@ export const teams = [
     image: null,
     imageAlt: null,
   },
+  {
+    // Guest team for the IVC holiday games (league decision: these games count).
+    slug: "ivc",
+    name: "IVC",
+    image: null,
+    imageAlt: null,
+    guest: true,
+  },
 ];
 
 export function getTeamBySlug(slug) {
@@ -109,6 +117,7 @@ export const locationMeta = {
   "Calexico": { id: "calexico", name: "Calexico High School", address: "1030 Encinas Ave, Calexico, CA 92231" },
   "Central": { id: "central", name: "Central Union HS", address: "1001 W Brighton Ave, El Centro, CA 92243" },
   "Brawley": { id: "brawley", name: "Wiest Field", address: "1044 Magnolia St, Brawley, CA 92227" },
+  "IVC": { id: "ivc", name: "IVC Baseball Field", address: "380 E Aten Rd, Imperial, CA 92251" },
   "Holtville": { id: "stark", name: "Holtville (Stark)", address: "Holtville, CA" },
 };
 

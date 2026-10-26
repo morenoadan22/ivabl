@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { schedule, mapTeamNameToPage, isPlayoffWeek, isSeededPlaceholder } from "../data/schedule.js";
-import { getTeamByName } from "../data/teams.js";
+import { api } from "../api/client.js";
+import { groupGamesByWeek, isPlayoffWeek, isSeededPlaceholder, slugForTeam } from "../utils/games.js";
 import GameChangerWidget from "../components/GameChangerWidget.jsx";
 import SponsorBanner from "../components/SponsorBanner.jsx";
 
-function TeamLink({ name, scorePrefix, isWinner, isLoser, isTie }) {
+function TeamLink({ name, teams, scorePrefix, isWinner, isLoser, isTie }) {
   if (isSeededPlaceholder(name)) {
     const isWinnerSeed = /^Winner/i.test(name);
     return (
@@ -15,15 +15,14 @@ function TeamLink({ name, scorePrefix, isWinner, isLoser, isTie }) {
     );
   }
   const color = isWinner ? "text-emerald-700 font-semibold" : isLoser ? "text-red-600" : isTie ? "text-amber-600 font-medium" : "text-navy";
-  const team = getTeamByName(name);
   return (
-    <Link to={`/team/${mapTeamNameToPage(name)}`} className={`hover:underline underline-offset-2 ${color}`}>
+    <Link to={`/team/${slugForTeam(teams, name)}`} className={`hover:underline underline-offset-2 ${color}`}>
       {scorePrefix}{name}
     </Link>
   );
 }
 
-function GameLine({ game, showMeta = true }) {
+function GameLine({ game, teams, showMeta = true, cornerBadge = null }) {
   const hs = game.result?.home;
   const as = game.result?.away;
   const hasResult = hs !== undefined && as !== undefined;
@@ -35,7 +34,10 @@ function GameLine({ game, showMeta = true }) {
 
   if (hasResult) {
     return (
-      <div className="rounded-lg bg-black/[0.03] border border-black/5 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center">
+      <div className={`rounded-lg bg-black/[0.03] border border-black/5 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center relative${cornerBadge ? " pr-14" : ""}`}>
+        {cornerBadge && (
+          <span className="absolute right-1.5 top-1.5 inline-flex px-2 py-0.5 rounded-full bg-brick text-white text-[10px] font-black tracking-widest">{cornerBadge}</span>
+        )}
         {showMeta && (
         <div className="flex flex-wrap items-center gap-1.5 mb-1">
           <span className="text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded bg-navy text-white shrink-0">FINAL</span>
@@ -45,9 +47,9 @@ function GameLine({ game, showMeta = true }) {
         </div>
         )}
         <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words">
-          <TeamLink name={game.away} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
+          <TeamLink name={game.away} teams={teams} scorePrefix={awayPrefix} isWinner={awayWin} isLoser={homeWin} isTie={isTie} />
           <span className="text-navy/30 text-xs">vs.</span>
-          <TeamLink name={game.home} scorePrefix={homePrefix} isWinner={homeWin} isLoser={awayWin} isTie={isTie} />
+          <TeamLink name={game.home} teams={teams} scorePrefix={homePrefix} isWinner={homeWin} isLoser={awayWin} isTie={isTie} />
         </div>
         {game.description && <div className="text-[11px] text-navy/60 mt-1 leading-tight break-words">{game.description}</div>}
       </div>
@@ -55,7 +57,10 @@ function GameLine({ game, showMeta = true }) {
   }
 
   return (
-    <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center">
+    <div className={`rounded-lg bg-amber-50/70 border border-amber-200/60 px-2.5 py-2 min-w-0 overflow-hidden h-full flex flex-col justify-center relative${cornerBadge ? " pr-14" : ""}`}>
+      {cornerBadge && (
+        <span className="absolute right-1.5 top-1.5 inline-flex px-2 py-0.5 rounded-full bg-brick text-white text-[10px] font-black tracking-widest">{cornerBadge}</span>
+      )}
       {showMeta && (
       <div className="flex flex-wrap items-center gap-1.5 mb-1">
         <span className="text-[10px] font-black tracking-widest px-1 py-0.5 rounded bg-gold text-navy shrink-0">UPCOMING</span>
@@ -65,9 +70,9 @@ function GameLine({ game, showMeta = true }) {
       </div>
       )}
       <div className="flex flex-wrap items-baseline gap-x-1 text-[13px] leading-snug min-w-0 break-words font-medium">
-        <TeamLink name={game.away} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
+        <TeamLink name={game.away} teams={teams} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
         <span className="text-navy/40 text-xs">vs.</span>
-        <TeamLink name={game.home} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
+        <TeamLink name={game.home} teams={teams} scorePrefix="" isWinner={false} isLoser={false} isTie={false} />
       </div>
       {game.description && <div className="text-[11px] text-brick font-semibold mt-1 leading-tight break-words">{game.description}</div>}
     </div>
@@ -97,7 +102,7 @@ function groupGamesByTime(games) {
 
 const FIELD_ORDER = ["Stark", "Sunflower", "Central", "Calexico"];
 
-function FieldMatrix({ games }) {
+function FieldMatrix({ games, teams }) {
   const slots = groupGamesByTime(games);
   const fields = [...new Set(games.map((g) => g.location))].sort((a, b) => {
     const ia = FIELD_ORDER.indexOf(a);
@@ -105,6 +110,10 @@ function FieldMatrix({ games }) {
     return (ia === -1 ? FIELD_ORDER.length : ia) - (ib === -1 ? FIELD_ORDER.length : ib);
   });
   const gameAt = (field, slot) => games.find((g) => g.location === field && (g.time || "Time TBD") === slot);
+  // Most games share the week's Saturday date; flag any played on another day.
+  const dateCounts = {};
+  games.forEach((g) => { dateCounts[g.date] = (dateCounts[g.date] || 0) + 1; });
+  const modalDate = Object.keys(dateCounts).sort((a, b) => dateCounts[b] - dateCounts[a])[0];
   const stacked = (
     <div className="sm:hidden space-y-4">
       {slots.map((s) => (
@@ -112,7 +121,7 @@ function FieldMatrix({ games }) {
           <span className="inline-flex px-3 py-1 rounded-full bg-navy text-white text-[12px] font-black tracking-widest">{s.key.toUpperCase()}</span>
           <div className="space-y-2 mt-2">
             {s.games.map((g, idx) => (
-              <GameLine key={idx} game={g} />
+              <GameLine key={idx} game={g} teams={teams} />
             ))}
           </div>
         </div>
@@ -144,7 +153,13 @@ function FieldMatrix({ games }) {
             {slots.map((s) => {
               const g = gameAt(field, s.key);
               return g ? (
-                <GameLine key={s.key} game={g} showMeta={false} />
+                <GameLine
+                  key={s.key}
+                  game={g}
+                  teams={teams}
+                  showMeta={false}
+                  cornerBadge={g.date !== modalDate ? `${g.dayOfWeek.slice(0, 3).toUpperCase()} ${g.date}` : null}
+                />
               ) : (
                 <div key={s.key} className="rounded-lg border border-dashed border-black/10 bg-black/[0.02] flex items-center justify-center">
                   <span className="text-navy/20 text-sm">—</span>
@@ -163,13 +178,29 @@ export default function Schedule() {
   const [isReversed, setIsReversed] = useState(false);
   const weekRefs = useRef([]);
   const [showJump, setShowJump] = useState(true);
+  const [schedule, setSchedule] = useState(null);
+  const [teams, setTeams] = useState([]);
+  const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+    Promise.all([api.seasonTeams(), api.seasonGames()])
+      .then(([ts, gs]) => {
+        setTeams(ts);
+        setSchedule(groupGamesByWeek(gs));
+      })
+      .catch((e) => setLoadError(e.message));
+  }, []);
 
   const nextWeekIndex = useMemo(() => {
+    if (!schedule) return -1;
     const idx = schedule.findIndex(w => w.games.some(g => !g.result));
     return idx === -1 ? -1 : idx;
-  }, []);
-  const displaySchedule = useMemo(() => (isReversed ? [...schedule].reverse() : schedule), [isReversed]);
-  const nextDisplayIndex = nextWeekIndex === -1 ? -1 : isReversed ? schedule.length - 1 - nextWeekIndex : nextWeekIndex;
+  }, [schedule]);
+  const displaySchedule = useMemo(() => {
+    if (!schedule) return [];
+    return isReversed ? [...schedule].reverse() : schedule;
+  }, [schedule, isReversed]);
+  const nextDisplayIndex = nextWeekIndex === -1 ? -1 : isReversed ? displaySchedule.length - 1 - nextWeekIndex : nextWeekIndex;
 
   const jumpToNext = () => {
     const el = nextDisplayIndex !== -1 ? weekRefs.current[nextDisplayIndex] : null;
@@ -239,7 +270,17 @@ export default function Schedule() {
         <SponsorBanner compact />
       </div>
 
-      {displaySchedule.length === 0 && (
+      {schedule === null && !loadError && (
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 p-8 text-center text-sm text-navy/50">
+          Loading schedule…
+        </div>
+      )}
+      {loadError && (
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 p-8 text-center text-sm text-brick font-semibold">
+          Failed to load schedule: {loadError}
+        </div>
+      )}
+      {displaySchedule.length === 0 && schedule !== null && !loadError && (
         <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
           <div className="p-6 sm:p-8 text-center">
             <div className="text-[11px] font-black tracking-[0.16em] text-gold">FALL/WINTER 2026</div>
@@ -306,7 +347,7 @@ export default function Schedule() {
                   </div>
 
                   <div className="p-3 sm:p-4">
-                    <FieldMatrix games={week.games} />
+                    <FieldMatrix games={week.games} teams={teams} />
                   </div>
                 </div>
               </div>

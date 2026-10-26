@@ -1,1 +1,29 @@
-{}
+{
+    "Aztecas": [
+        { "number": "3", "firstName": "Aiden", "lastName": "Avila" },    
+        { "number": "4", "firstName": "Carlos", "lastName": "Benitez" },
+        { "number": "33", "firstName": "Gil", "lastName": "Cano"},
+        { "number": "25", "firstName": "Jerry", "lastName": "Cortez"},
+        { "number": "13", "firstName": "JC", "lastName": "Luna"},
+        { "number": "17", "firstName": "Tito", "lastName": "Montaño"},
+        { "number": "36", "firstName": "Jorge", "lastName": "Mora"},
+        { "number": "22", "firstName": "Adan", "lastName": "Moreno" },
+        { "number": "6", "firstName": "AJ", "lastName": "Moreno" },
+        { "number": "11", "firstName": "Bobby", "lastName": "Moreno"},
+        { "number": "27", "firstName": "Marcos", "lastName": "Peralta" },
+        { "number": "26", "firstName": "Sergio", "lastName": "Ramirez" },
+        { "number": "15", "firstName": "Eddie", "lastName": "Ramirez" },
+        { "number": "16", "firstName": "Uriel", "lastName": "Rodriguez"},
+        { "number": "8", "firstName": "Josh", "lastName": "Smith"},
+        { "number": "12", "firstName": "Khyle", "lastName": "Pearson"}
+    ],
+    "Hot Shotz": [],
+    "Impact": [],
+    "Sandlot": [],
+    "Dawgz": [],
+    "Los Gringos": [],
+    "SBC": [],
+    "Calexico Baseball": [],
+    "Outlaws": [],
+    "Arabes": []
+}

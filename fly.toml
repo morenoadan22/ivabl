@@ -1,0 +1,22 @@
+app = "ivabl-api"
+primary_region = "lax"
+
+[build]
+  dockerfile = "server/Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[mounts]]
+  source = "ivabl_data"
+  destination = "/data"
+
+[env]
+  PORT = "8080"
+  DB_PATH = "/data/ivabl.db"
+  # Set to the public site origin so login cookies work cross-site:
+  # APP_ORIGIN = "https://www.ivabl.com"

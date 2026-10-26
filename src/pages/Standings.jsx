@@ -1,11 +1,25 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { schedule, mapTeamNameToPage } from "../data/schedule.js";
+import { api } from "../api/client.js";
 import { computeStandings } from "../utils/standings.js";
-import { getTeamByName } from "../data/teams.js";
+import { groupGamesByWeek, slugForTeam } from "../utils/games.js";
 
 export default function Standings() {
-  const rows = computeStandings(schedule);
+  const [rows, setRows] = useState(null);
+  const [teams, setTeams] = useState([]);
+  const [error, setError] = useState("");
   const PLAYOFF_CUTOFF = 5;
+
+  useEffect(() => {
+    Promise.all([api.seasonTeams(), api.seasonGames()])
+      .then(([ts, gs]) => {
+        setTeams(ts);
+        setRows(computeStandings(groupGamesByWeek(gs)));
+      })
+      .catch((e) => setError(e.message));
+  }, []);
+
+  const byName = Object.fromEntries(teams.map((t) => [t.name, t]));
 
   return (
     <div className="space-y-6">
@@ -16,13 +30,16 @@ export default function Standings() {
         </div>
 
         <div className="overflow-x-auto">
-          {rows.length === 0 ? (
+          {error && <div className="p-6 text-sm text-brick font-semibold">Failed to load standings: {error}</div>}
+          {!rows && !error && <div className="p-8 text-center text-sm text-navy/50">Loading standings…</div>}
+          {rows && rows.length === 0 && (
           <div className="p-6 sm:p-8 text-center">
             <div className="text-[11px] font-black tracking-[0.16em] text-gold">FALL/WINTER 2026</div>
             <div className="font-display font-black text-navy text-lg mt-2">No standings yet</div>
             <p className="text-sm text-navy/60 mt-1">Games begin October 31st — standings appear here once results roll in.</p>
           </div>
-        ) : (
+        )}
+          {rows && rows.length > 0 && (
         <table className="w-full text-sm">
             <thead>
               <tr className="text-[11px] tracking-widest font-bold text-navy/60 border-b bg-cream/60">
@@ -41,14 +58,14 @@ export default function Standings() {
               {rows.map(r => {
                 const isPlayoff = r.rank <= PLAYOFF_CUTOFF;
                 const isCutoff = r.rank === PLAYOFF_CUTOFF;
-                const team = getTeamByName(r.name);
+                const team = byName[r.name];
                 return (
                   <tr key={r.name} className={`border-b last:border-0 ${isPlayoff ? "bg-white" : "bg-white/60"} ${isCutoff ? "border-b-2 border-amber-300" : "border-black/5"} hover:bg-cream/50`}>
                     <td className="px-4 py-3">
                       <span className={`inline-flex h-6 min-w-6 items-center justify-center rounded-full text-xs font-black px-1.5 ${isPlayoff ? "bg-navy text-white" : "bg-navy/10 text-navy/60"}`}>{r.rank}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <Link to={`/team/${mapTeamNameToPage(r.name)}`} className="flex items-center gap-2.5 group">
+                      <Link to={`/team/${slugForTeam(teams, r.name)}`} className="flex items-center gap-2.5 group">
                         {team?.image && <img src={team.image} alt="" className="h-7 w-7 rounded-full object-cover ring-1 ring-black/10" />}
                         <span className="font-bold text-navy group-hover:underline underline-offset-2">{r.name}</span>
                         {isPlayoff && <span className="text-[10px] font-bold tracking-widest bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">PLAYOFF</span>}

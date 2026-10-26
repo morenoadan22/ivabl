@@ -1,8 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { schedule, mapTeamNameToPage } from "../data/schedule.js";
-import { getTeamBySlug, locationMeta } from "../data/teams.js";
-import rosters from "../data/rosters.json";
+import { api } from "../api/client.js";
+import { slugForTeam } from "../utils/games.js";
+import { locationMeta } from "../data/teams.js";
 
 function ManagerAvatar({ m }) {
   if (m.image) {
@@ -172,27 +172,40 @@ function CalendarIcon() {
 
 export default function TeamPage() {
   const { slug } = useParams();
-  const team = getTeamBySlug(slug);
-  const teamName = team?.name;
-  const roster = teamName ? (rosters[teamName] || rosters[teamName.replace('Los Gringos','Los Grignos')] || []) : [];
-  // handle typo in rosters.json
-  const effectiveRoster = roster.length ? roster : (slug==='los_gringos' ? (rosters["Los Grignos"]||[]) : roster);
+  const [team, setTeam] = useState(undefined);
+  const [teams, setTeams] = useState([]);
+  const [effectiveRoster, setEffectiveRoster] = useState([]);
+  const [games, setGames] = useState([]);
+  const [error, setError] = useState("");
 
-  const games = teamName ? schedule.flatMap(w=> w.games.filter(g=> g.home===teamName || g.away===teamName).map(g=> ({...g, week:w.week}))) : [];
+  useEffect(() => {
+    api.seasonTeam(slug).then((d) => {
+      setTeam(d.team);
+      setEffectiveRoster(d.roster);
+      setGames(d.games);
+    }).catch(() => setTeam(null));
+    api.seasonTeams().then(setTeams).catch(() => {});
+  }, [slug]);
+
+  const teamName = team?.name;
 
   const [statsMap, setStatsMap] = useState({});
 
   useEffect(()=>{
     if(!teamName) return;
-    fetch("/stats.csv").then(r=> r.text()).then(csv=>{
+    api.seasonStatsCsv().then(csv=>{
       setStatsMap(parseStatsForTeam(csv, teamName));
     }).catch(()=>{});
   },[teamName]);
 
+  if (team === undefined) {
+    return <div className="p-8 text-center text-sm text-white/60">Loading team…</div>;
+  }
+
   if(!team){
     return (
       <div className="rounded-2xl bg-white p-8 text-center shadow">
-        <div className="text-navy font-bold">Team not found</div>
+        <div className="text-navy font-bold">{error || "Team not found"}</div>
         <Link to="/" className="text-sm text-navy underline">Back to schedule</Link>
       </div>
     );
@@ -271,7 +284,7 @@ export default function TeamPage() {
                           })()}
                         </span>
                       </td>
-                      <td className="px-3 py-2"><span className="text-navy/60 mr-1">{isHome?"vs.":"@"}</span><Link to={`/team/${mapTeamNameToPage(opp)}`} className="font-semibold text-navy hover:underline">{opp}</Link></td>
+                      <td className="px-3 py-2"><span className="text-navy/60 mr-1">{isHome?"vs.":"@"}</span><Link to={`/team/${slugForTeam(teams, opp)}`} className="font-semibold text-navy hover:underline">{opp}</Link></td>
                       <td className="px-3 py-2"><Link to="/locations" className="text-navy hover:underline">{g.location}</Link></td>
                       <td className="px-3 py-2">{result || <span className="text-navy/40">—</span>}</td>
                     </tr>

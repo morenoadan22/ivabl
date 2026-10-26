@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { schedule } from "../data/schedule.js";
+import { api } from "../api/client.js";
+import { groupGamesByWeek } from "../utils/games.js";
 import { processCSVData, categoryMeta, ITEMS_PER_PAGE } from "../utils/stats.js";
 
 const battingCats = ["battingAverage","qualityAtBats","hits","homeRuns","rbi","ops","doubles"];
@@ -36,11 +37,8 @@ export default function Statistics() {
   const [error, setError] = useState("");
 
   useEffect(()=>{
-    fetch("/stats.csv").then(r=>{
-      if(!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.text();
-    }).then(csv=>{
-      const parsed = processCSVData(csv, schedule);
+    Promise.all([api.seasonStatsCsv(), api.seasonGames()]).then(([csv, games])=>{
+      const parsed = processCSVData(csv, groupGamesByWeek(games));
       setData(parsed);
     }).catch(e=> setError(e.message));
   },[]);
