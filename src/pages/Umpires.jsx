@@ -209,7 +209,7 @@ export default function Umpires() {
       )}
 
       <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">Upcoming games</h2>
-      <p className="text-sm text-white/60 mb-2">Showing the next 3 weeks. Up to two games per week — same field, different times. Approving a second game drops your other requests that week.</p>
+      <p className="text-sm text-white/60 mb-2">Showing the next 3 weeks. Up to two games per week — same field, different times. Your other requests stay open until the commissioner decides them.</p>
       {weeks.length === 0 && (
         <p className="text-sm text-white/60">No games in the next 3 weeks.</p>
       )}

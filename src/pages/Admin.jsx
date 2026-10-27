@@ -118,12 +118,12 @@ export default function Admin() {
       setBusy("");
     }
   };
-  const doUnassign = async (g) => {
-    if (!window.confirm(`Remove ${g.approved_umpire} from ${g.away} vs ${g.home}?`)) return;
+  const doReopen = async (g) => {
+    if (!window.confirm(`Remove ${g.approved_umpire} from ${g.away} vs ${g.home}? Their request goes back to pending.`)) return;
     setError("");
-    setBusy(`unassign-${g.id}`);
+    setBusy(`reopen-${g.approved_claim_id}`);
     try {
-      await api.unassign(g.approved_claim_id);
+      await api.reopen(g.approved_claim_id);
       await load();
     } catch (e) {
       setError(e.message);
@@ -178,6 +178,18 @@ export default function Admin() {
   };
 
   const uncovered = coverage.filter((g) => !g.approved_umpire);
+  // Pending requests grouped by game, first-come first-served.
+  const pendingsByGame = useMemo(() => {
+    const m = new Map();
+    for (const q of queue) {
+      if (!m.has(q.game_id)) m.set(q.game_id, []);
+      m.get(q.game_id).push(q);
+    }
+    for (const list of m.values()) {
+      list.sort((x, y) => (x.created_at < y.created_at ? -1 : x.created_at > y.created_at ? 1 : x.id - y.id));
+    }
+    return m;
+  }, [queue]);
 
   const weeks = useMemo(() => {
     const byWeek = new Map();
@@ -239,33 +251,8 @@ export default function Admin() {
       </div>
       {error && <p className="mt-3 text-sm text-brick font-semibold">{error}</p>}
 
-      <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">Pending requests</h2>
-      <p className="text-sm text-white/60 mb-2">Up to two games per umpire per week — same field, different times. Approving a second game drops their other pending requests that week.</p>
-      {queue.length === 0 ? (
-        <p className="text-sm text-white/60">Queue is clear.</p>
-      ) : (
-        <div className="space-y-2">
-          {queue.map((q) => (
-            <div key={q.id} className="flex flex-wrap items-center justify-between gap-2 bg-white rounded-xl px-4 py-2.5 ring-1 ring-black/5 text-sm">
-              <span className="text-navy">
-                <strong>{q.umpire}</strong> → {q.away} vs {q.home}, {q.date} {q.time} @{q.location}
-              </span>
-              <span className="flex gap-2 shrink-0">
-                <button disabled={!!busy} onClick={() => decide(q.id, true)}
-                  className="px-4 py-1.5 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition disabled:opacity-50">
-                  {busy === String(q.id) ? "…" : "Approve"}
-                </button>
-                <button disabled={!!busy} onClick={() => decide(q.id, false)}
-                  className="px-4 py-1.5 rounded-full bg-white border border-brick/40 text-brick text-xs font-black hover:bg-brick hover:text-white transition disabled:opacity-50">
-                  Deny
-                </button>
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <h2 className="font-display font-bold text-white text-lg mt-6 mb-2">Coverage</h2>
+      <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">Coverage</h2>
+      <p className="text-sm text-white/60 mb-2">Up to two games per umpire per week — same field, different times. Requests are listed first-come, first-served; nothing is auto-dropped.</p>
       <div className="space-y-4">
         {weeks.map(([week, slots]) => (
           <div key={week} className="bg-white rounded-2xl shadow ring-1 ring-black/5 overflow-hidden">
@@ -274,34 +261,58 @@ export default function Admin() {
               <div key={time}>
                 <div className="px-4 pt-2.5 pb-1 text-xs font-black uppercase tracking-wider text-navy/50">{time}</div>
                 <div className="divide-y divide-black/5 text-sm">
-                  {gs.map((g) => (
-                    <div key={g.id} className="flex items-center justify-between gap-2 px-4 py-2">
-                      <span className="text-navy">
-                        <Link to="/locations" className="text-[11px] font-black px-1.5 py-0.5 rounded bg-white border border-black/5 text-navy hover:bg-navy hover:text-white transition shrink-0 mr-2">@{g.location}</Link>
-                        {g.away} vs {g.home} <span className="text-navy/50">— {g.date}</span>
-                      </span>
-                      {g.approved_umpire
-                        ? <span className="flex items-center gap-1.5 shrink-0">
-                          <span className="text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full">{g.approved_umpire}</span>
-                          <button disabled={!!busy} onClick={() => doUnassign(g)}
-                            className="px-3 py-1 rounded-full bg-white border border-brick/40 text-brick text-xs font-black hover:bg-brick hover:text-white transition disabled:opacity-40">
-                            {busy === `unassign-${g.id}` ? "…" : "Remove"}
-                          </button>
+                  {gs.map((g) => {
+                    const reqs = pendingsByGame.get(g.id) ?? [];
+                    return (
+                    <div key={g.id} className="px-4 py-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-navy">
+                          <Link to="/locations" className="text-[11px] font-black px-1.5 py-0.5 rounded bg-white border border-black/5 text-navy hover:bg-navy hover:text-white transition shrink-0 mr-2">@{g.location}</Link>
+                          {g.away} vs {g.home} <span className="text-navy/50">— {g.date}</span>
                         </span>
-                        : <span className="flex items-center gap-1.5 shrink-0">
-                          <span className="text-xs font-black text-brick bg-red-50 px-2.5 py-0.5 rounded-full">OPEN</span>
-                          <select value={assignSel[g.id] ?? ""} onChange={(e) => setAssignSel((s) => ({ ...s, [g.id]: e.target.value }))}
-                            className="text-xs border border-navy/15 rounded-full pl-2 pr-1 py-1 text-navy bg-white max-w-[130px]">
-                            <option value="">Umpire…</option>
-                            {activeUmpires.map((u) => <option key={u.id} value={u.id}>{umpireLabel(u)}</option>)}
-                          </select>
-                          <button disabled={!!busy || !assignSel[g.id]} onClick={() => doAssign(g.id)}
-                            className="px-3 py-1 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition disabled:opacity-40">
-                            {busy === `assign-${g.id}` ? "…" : "Assign"}
-                          </button>
-                        </span>}
+                        {g.approved_umpire
+                          ? <span className="flex items-center gap-1.5 shrink-0">
+                            <span className="text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full">{g.approved_umpire}</span>
+                            <button disabled={!!busy} onClick={() => doReopen(g)}
+                              className="px-3 py-1 rounded-full bg-white border border-brick/40 text-brick text-xs font-black hover:bg-brick hover:text-white transition disabled:opacity-40">
+                              {busy === `reopen-${g.approved_claim_id}` ? "…" : "Remove"}
+                            </button>
+                          </span>
+                          : <span className="flex items-center gap-1.5 shrink-0">
+                            <span className="text-xs font-black text-brick bg-red-50 px-2.5 py-0.5 rounded-full">OPEN</span>
+                            <select value={assignSel[g.id] ?? ""} onChange={(e) => setAssignSel((s) => ({ ...s, [g.id]: e.target.value }))}
+                              className="text-xs border border-navy/15 rounded-full pl-2 pr-1 py-1 text-navy bg-white max-w-[130px]">
+                              <option value="">Umpire…</option>
+                              {activeUmpires.map((u) => <option key={u.id} value={u.id}>{umpireLabel(u)}</option>)}
+                            </select>
+                            <button disabled={!!busy || !assignSel[g.id]} onClick={() => doAssign(g.id)}
+                              className="px-3 py-1 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition disabled:opacity-40">
+                              {busy === `assign-${g.id}` ? "…" : "Assign"}
+                            </button>
+                          </span>}
+                      </div>
+                      {reqs.map((q, i) => (
+                        <div key={q.id} className="flex flex-wrap items-center justify-between gap-2 mt-1.5 ml-4 pl-3 border-l-2 border-gold/60">
+                          <span className="text-navy text-[13px]">
+                            <span className="text-[11px] font-black text-navy/40 mr-1.5">#{i + 1}</span>
+                            <strong>{q.umpire}</strong>
+                            <span className="text-navy/50"> — requested {String(q.created_at).slice(5, 16)}</span>
+                          </span>
+                          <span className="flex gap-1.5 shrink-0">
+                            <button disabled={!!busy} onClick={() => decide(q.id, true)}
+                              className="px-3 py-1 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition disabled:opacity-50">
+                              {busy === String(q.id) ? "…" : "Approve"}
+                            </button>
+                            <button disabled={!!busy} onClick={() => decide(q.id, false)}
+                              className="px-3 py-1 rounded-full bg-white border border-brick/40 text-brick text-xs font-black hover:bg-brick hover:text-white transition disabled:opacity-50">
+                              Deny
+                            </button>
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}

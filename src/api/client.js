@@ -106,7 +106,8 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ game_id, umpire_id }),
     }),
-  unassign: (id) => request(`/api/admin/claims/${id}`, { method: "DELETE" }),
+  reopen: (id) =>
+    request(`/api/admin/claims/${id}/reopen`, { method: "POST" }),
   coverage: () => request("/api/admin/coverage"),
   workload: () => request("/api/admin/workload"),
 };

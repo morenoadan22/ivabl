@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import Database from "better-sqlite3";
 import {
   openDb, createUmpire, verifyUmpire, createSession, getSession, deleteSession,
-  upsertGame, requestClaim, withdrawClaim, decideClaim, assignUmpire, deleteClaim, listGamesWithClaims,
+  upsertGame, requestClaim, withdrawClaim, decideClaim, assignUmpire, reopenClaim, listGamesWithClaims,
   myClaims, pendingQueue, coverage, workload, publicRoster,
   updateUmpire, adminRoster, ownProfile,
   upsertTeam, listTeams, getTeam, teamGames, setScores, replaceRoster, listRoster,
@@ -58,15 +58,15 @@ test("request/withdraw claim lifecycle", () => {
   assert.throws(() => requestClaim(db, a.id, "nope"), /unknown game/);
 });
 
-test("approve auto-denies rival pending claims; decided claims are final", () => {
+test("approve leaves rival pendings for the admin; same game can't be approved twice", () => {
   const { db, a, b, g1 } = setup();
   const idA = requestClaim(db, a.id, g1);
   const idB = requestClaim(db, b.id, g1);
   decideClaim(db, idA, true);
-  const rows = db.prepare("SELECT id, status FROM claims ORDER BY id").all();
-  assert.deepEqual(rows.map((r) => r.status), ["approved", "denied"]);
-  assert.deepEqual(pendingQueue(db), []);
-  assert.throws(() => decideClaim(db, idB, true), /already decided/);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(idB).status, "pending");
+  assert.equal(pendingQueue(db).length, 1);
+  assert.throws(() => decideClaim(db, idB, true), /already assigned/);
+  assert.throws(() => decideClaim(db, idA, true), /already decided/);
 });
 
 test("two games per week allowed on the same field at different times", () => {
@@ -99,8 +99,8 @@ test("incompatible requests blocked; third request blocked; second approval drop
   const id3 = requestClaim(db, a.id, friAM);
   assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id2).status, "pending");
   assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id3).status, "pending");
-  decideClaim(db, id2, true); // second approval drops the remaining pendings
-  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id3).status, "denied");
+  decideClaim(db, id2, true); // second approval leaves the rest pending for the admin
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id3).status, "pending");
   const extra = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "K", home: "L", location: "Central" });
   assert.throws(() => requestClaim(db, a.id, extra), /two approved games/);
   // different week: allowed
@@ -125,7 +125,8 @@ test("admin can assign an umpire directly; same two-per-week rules apply", () =>
   const rival = requestClaim(db, b.id, starkAM);
   const id = assignUmpire(db, starkAM, a.id);
   assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id).status, "approved");
-  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(rival).status, "denied"); // rival pending denied
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(rival).status, "pending"); // rival left for the admin
+  assert.throws(() => decideClaim(db, rival, true), /already assigned/);
   // unknown game / umpire / admin / already-assigned
   assert.throws(() => assignUmpire(db, "nope", a.id), /unknown game/);
   assert.throws(() => assignUmpire(db, starkAM, 9999), /unknown umpire/);
@@ -142,20 +143,23 @@ test("admin can assign an umpire directly; same two-per-week rules apply", () =>
   assert.throws(() => assignUmpire(db, extra, a.id), /two approved games/);
 });
 
-test("admin can remove an umpire from a game; the game reopens", () => {
+test("admin can reopen an assignment; the request goes back to pending", () => {
   const { db, a, b, g1 } = setup();
   const id = requestClaim(db, a.id, g1);
   decideClaim(db, id, true);
   const assigned = coverage(db).find((g) => g.id === g1);
   assert.equal(assigned.approved_umpire, "Ump One");
   assert.ok(assigned.approved_claim_id);
-  deleteClaim(db, assigned.approved_claim_id);
+  reopenClaim(db, assigned.approved_claim_id);
   const open = coverage(db).find((g) => g.id === g1);
   assert.equal(open.approved_umpire, null);
-  assert.throws(() => deleteClaim(db, assigned.approved_claim_id), /not found/);
-  const id2 = requestClaim(db, b.id, g1); // another umpire can now claim it
-  decideClaim(db, id2, true);
-  assert.equal(coverage(db).find((g) => g.id === g1).approved_umpire, "Ump Two");
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id).status, "pending");
+  assert.throws(() => reopenClaim(db, id), /already pending/);
+  const idB = requestClaim(db, b.id, g1);
+  decideClaim(db, idB, false);
+  reopenClaim(db, idB); // denied claims can be reopened too
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(idB).status, "pending");
+  assert.throws(() => reopenClaim(db, 9999), /not found/);
 });
 
 test("deny leaves the game open for others", () => {

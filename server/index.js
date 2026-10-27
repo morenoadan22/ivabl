@@ -1,7 +1,7 @@
 import express from "express";
 import {
   openDb, verifyUmpire, createSession, getSession, deleteSession,
-  requestClaim, withdrawClaim, decideClaim, assignUmpire, deleteClaim, listGamesWithClaims,
+  requestClaim, withdrawClaim, decideClaim, assignUmpire, reopenClaim, listGamesWithClaims,
   myClaims, pendingQueue, coverage, workload, publicRoster,
   updateUmpire, adminRoster, ownProfile,
   listTeams, getTeam, listGamesPublic, teamGames, setScores,
@@ -211,9 +211,9 @@ app.post("/api/admin/claims/:id/decision", session, requireAdmin, (req, res) => 
   }
 });
 
-app.delete("/api/admin/claims/:id", session, requireAdmin, (req, res) => {
+app.post("/api/admin/claims/:id/reopen", session, requireAdmin, (req, res) => {
   try {
-    deleteClaim(db, Number(req.params.id));
+    reopenClaim(db, Number(req.params.id));
     res.json({ ok: true });
   } catch (e) {
     res.status(e.status || 500).json({ error: e.message });

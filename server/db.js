@@ -259,37 +259,20 @@ export function decideClaim(db, claimId, approve) {
   if (!row) throw Object.assign(new Error("not found"), { status: 404 });
   if (row.status !== "pending") throw Object.assign(new Error("already decided"), { status: 409 });
   const game = db.prepare("SELECT week, date, time, location FROM games WHERE id = ?").get(row.game_id);
-  const week = game?.week;
-  const alreadyApproved = approve && game ? assertSecondGameOk(db, row.umpire_id, game) : 0;
-  const decide = db.transaction(() => {
-    db.prepare("UPDATE claims SET status = ?, decided_at = datetime('now') WHERE id = ?").run(
-      approve ? "approved" : "denied", claimId
-    );
-    if (approve) {
-      db.prepare(
-        "UPDATE claims SET status = 'denied', decided_at = datetime('now') WHERE game_id = ? AND id != ? AND status = 'pending'"
-      ).run(row.game_id, claimId);
-      if (week !== undefined) {
-        if (alreadyApproved >= 1) {
-          // Second approval: the week is full, drop their other pending requests that week.
-          db.prepare(
-            `UPDATE claims SET status = 'denied', decided_at = datetime('now')
-             WHERE umpire_id = ? AND status = 'pending' AND id != ?
-             AND game_id IN (SELECT id FROM games WHERE week = ?)`
-          ).run(row.umpire_id, claimId, week);
-        } else {
-          // First approval: keep compatible requests (same field, no overlap), drop the rest.
-          db.prepare(
-            `UPDATE claims SET status = 'denied', decided_at = datetime('now')
-             WHERE umpire_id = ? AND status = 'pending' AND id != ?
-             AND game_id IN (SELECT id FROM games WHERE week = ?
-               AND (location != ? OR (date = ? AND time = ?)))`
-          ).run(row.umpire_id, claimId, week, game.location, game.date, game.time);
-        }
-      }
+  if (approve && game) {
+    const taken = db.prepare(
+      "SELECT id FROM claims WHERE game_id = ? AND status = 'approved'"
+    ).get(row.game_id);
+    if (taken) {
+      throw Object.assign(new Error("game already assigned"), { status: 409 });
     }
-  });
-  decide();
+    assertSecondGameOk(db, row.umpire_id, game);
+  }
+  // Approving or denying touches only this claim. Everything else stays
+  // pending for the admin to decide; the checks above reject invalid approvals.
+  db.prepare("UPDATE claims SET status = ?, decided_at = datetime('now') WHERE id = ?").run(
+    approve ? "approved" : "denied", claimId
+  );
 }
 
 // Admin directly assigns an umpire to a game (no request needed).
@@ -303,33 +286,13 @@ export function assignUmpire(db, gameId, umpireId) {
   if (taken) throw Object.assign(new Error("game already assigned"), { status: 409 });
   const dup = db.prepare("SELECT id FROM claims WHERE game_id = ? AND umpire_id = ? AND status != 'denied'").get(gameId, umpireId);
   if (dup) throw Object.assign(new Error("already claimed"), { status: 409 });
-  const alreadyApproved = assertSecondGameOk(db, umpireId, game);
-  const assign = db.transaction(() => {
-    const info = db.prepare(
-      "INSERT INTO claims (game_id, umpire_id, status, decided_at) VALUES (?, ?, 'approved', datetime('now'))"
-    ).run(gameId, umpireId);
-    db.prepare(
-      "UPDATE claims SET status = 'denied', decided_at = datetime('now') WHERE game_id = ? AND status = 'pending' AND umpire_id != ?"
-    ).run(gameId, umpireId);
-    if (alreadyApproved >= 1) {
-      // Second approval: the week is full, drop their other pending requests that week.
-      db.prepare(
-        `UPDATE claims SET status = 'denied', decided_at = datetime('now')
-         WHERE umpire_id = ? AND status = 'pending' AND id != ?
-         AND game_id IN (SELECT id FROM games WHERE week = ?)`
-      ).run(umpireId, Number(info.lastInsertRowid), game.week);
-    } else {
-      // First approval: keep compatible requests, drop the rest.
-      db.prepare(
-        `UPDATE claims SET status = 'denied', decided_at = datetime('now')
-         WHERE umpire_id = ? AND status = 'pending' AND id != ?
-         AND game_id IN (SELECT id FROM games WHERE week = ?
-           AND (location != ? OR (date = ? AND time = ?)))`
-      ).run(umpireId, Number(info.lastInsertRowid), game.week, game.location, game.date, game.time);
-    }
-    return Number(info.lastInsertRowid);
-  });
-  return assign();
+  assertSecondGameOk(db, umpireId, game);
+  // Assignments never touch other claims: rivals and extra requests stay
+  // pending for the admin to decide; the checks above reject invalid approvals.
+  const info = db.prepare(
+    "INSERT INTO claims (game_id, umpire_id, status, decided_at) VALUES (?, ?, 'approved', datetime('now'))"
+  ).run(gameId, umpireId);
+  return Number(info.lastInsertRowid);
 }
 
 export function listGamesWithClaims(db, umpireId) {
@@ -370,10 +333,13 @@ export function coverage(db) {
   ).all().map((g) => ({ ...gameRow(g), approved_umpire: g.approved_umpire, approved_claim_id: g.approved_claim_id }));
 }
 
-// Admin removes an umpire from a game (any status). The game reopens for claims.
-export function deleteClaim(db, id) {
-  const info = db.prepare("DELETE FROM claims WHERE id = ?").run(id);
-  if (info.changes === 0) throw Object.assign(new Error("not found"), { status: 404 });
+// Admin reopens a decided claim: approved or denied goes back to pending.
+// Nothing is deleted; the game reopens for claims.
+export function reopenClaim(db, id) {
+  const row = db.prepare("SELECT status FROM claims WHERE id = ?").get(id);
+  if (!row) throw Object.assign(new Error("not found"), { status: 404 });
+  if (row.status === "pending") throw Object.assign(new Error("already pending"), { status: 409 });
+  db.prepare("UPDATE claims SET status = 'pending', decided_at = NULL WHERE id = ?").run(id);
 }
 
 export function workload(db) {
