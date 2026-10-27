@@ -1,7 +1,7 @@
 import express from "express";
 import {
   openDb, verifyUmpire, createSession, getSession, deleteSession,
-  requestClaim, withdrawClaim, decideClaim, listGamesWithClaims,
+  requestClaim, withdrawClaim, decideClaim, assignUmpire, listGamesWithClaims,
   myClaims, pendingQueue, coverage, workload, publicRoster,
   updateUmpire, adminRoster, ownProfile,
   listTeams, getTeam, listGamesPublic, teamGames, setScores,
@@ -206,6 +206,15 @@ app.post("/api/admin/claims/:id/decision", session, requireAdmin, (req, res) => 
   try {
     decideClaim(db, Number(req.params.id), req.body?.approve === true);
     res.json({ ok: true });
+  } catch (e) {
+    res.status(e.status || 500).json({ error: e.message });
+  }
+});
+
+app.post("/api/admin/assignments", session, requireAdmin, (req, res) => {
+  try {
+    const claimId = assignUmpire(db, req.body?.game_id, Number(req.body?.umpire_id));
+    res.json({ ok: true, claim_id: claimId });
   } catch (e) {
     res.status(e.status || 500).json({ error: e.message });
   }

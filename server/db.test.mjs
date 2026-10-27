@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import Database from "better-sqlite3";
 import {
   openDb, createUmpire, verifyUmpire, createSession, getSession, deleteSession,
-  upsertGame, requestClaim, withdrawClaim, decideClaim, listGamesWithClaims,
+  upsertGame, requestClaim, withdrawClaim, decideClaim, assignUmpire, listGamesWithClaims,
   myClaims, pendingQueue, coverage, workload, publicRoster,
   updateUmpire, adminRoster, ownProfile,
   upsertTeam, listTeams, getTeam, teamGames, setScores, replaceRoster, listRoster,
@@ -117,6 +117,29 @@ test("myClaims and queue expose the numeric claim id (not the game id)", () => {
   assert.equal(pendingQueue(db)[0].id, id);
   withdrawClaim(db, a.id, myClaims(db, a.id)[0].id); // the exposed id must work
   assert.equal(myClaims(db, a.id).length, 0);
+});
+
+test("admin can assign an umpire directly; same two-per-week rules apply", () => {
+  const { db, a, b, admin } = setup();
+  const starkAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "A", home: "B", location: "Stark" });
+  const rival = requestClaim(db, b.id, starkAM);
+  const id = assignUmpire(db, starkAM, a.id);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id).status, "approved");
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(rival).status, "denied"); // rival pending denied
+  // unknown game / umpire / admin / already-assigned
+  assert.throws(() => assignUmpire(db, "nope", a.id), /unknown game/);
+  assert.throws(() => assignUmpire(db, starkAM, 9999), /unknown umpire/);
+  assert.throws(() => assignUmpire(db, starkAM, admin.id), /unknown umpire/);
+  assert.throws(() => assignUmpire(db, starkAM, b.id), /game already assigned/);
+  const starkPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "C", home: "D", location: "Stark" });
+  // two-per-week rule: overlap and wrong field blocked, compatible second ok
+  const sunAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "E", home: "F", location: "Sunflower" });
+  assert.throws(() => assignUmpire(db, sunAM, a.id), /overlap/);
+  const sunPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "G", home: "H", location: "Sunflower" });
+  assert.throws(() => assignUmpire(db, sunPM, a.id), /same field/);
+  assignUmpire(db, starkPM, a.id);
+  const extra = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "I", home: "J", location: "Central" });
+  assert.throws(() => assignUmpire(db, extra, a.id), /two approved games/);
 });
 
 test("deny leaves the game open for others", () => {

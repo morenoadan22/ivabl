@@ -101,6 +101,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ approve }),
     }),
+  assign: (game_id, umpire_id) =>
+    request("/api/admin/assignments", {
+      method: "POST",
+      body: JSON.stringify({ game_id, umpire_id }),
+    }),
   coverage: () => request("/api/admin/coverage"),
   workload: () => request("/api/admin/workload"),
 };

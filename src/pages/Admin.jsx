@@ -99,6 +99,26 @@ export default function Admin() {
     }
   };
 
+  const [assignSel, setAssignSel] = useState({});
+  const umpireLabel = (u) =>
+    [u.first_name, u.last_name].filter(Boolean).join(" ") || u.name;
+  const activeUmpires = umpires.filter((u) => u.role === "umpire" && u.active);
+  const doAssign = async (gameId) => {
+    const umpireId = Number(assignSel[gameId]);
+    if (!umpireId) return;
+    setError("");
+    setBusy(`assign-${gameId}`);
+    try {
+      await api.assign(gameId, umpireId);
+      setAssignSel((s) => ({ ...s, [gameId]: "" }));
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy("");
+    }
+  };
+
   const saveUmpire = (id) => async (fields) => {
     setError("");
     setBusy(`umpire-${id}`);
@@ -249,7 +269,18 @@ export default function Admin() {
                       </span>
                       {g.approved_umpire
                         ? <span className="text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full shrink-0">{g.approved_umpire}</span>
-                        : <span className="text-xs font-black text-brick bg-red-50 px-2.5 py-0.5 rounded-full shrink-0">OPEN</span>}
+                        : <span className="flex items-center gap-1.5 shrink-0">
+                          <span className="text-xs font-black text-brick bg-red-50 px-2.5 py-0.5 rounded-full">OPEN</span>
+                          <select value={assignSel[g.id] ?? ""} onChange={(e) => setAssignSel((s) => ({ ...s, [g.id]: e.target.value }))}
+                            className="text-xs border border-navy/15 rounded-full pl-2 pr-1 py-1 text-navy bg-white max-w-[130px]">
+                            <option value="">Umpire…</option>
+                            {activeUmpires.map((u) => <option key={u.id} value={u.id}>{umpireLabel(u)}</option>)}
+                          </select>
+                          <button disabled={!!busy || !assignSel[g.id]} onClick={() => doAssign(g.id)}
+                            className="px-3 py-1 rounded-full bg-navy text-white text-xs font-black hover:bg-navy-deep transition disabled:opacity-40">
+                            {busy === `assign-${g.id}` ? "…" : "Assign"}
+                          </button>
+                        </span>}
                     </div>
                   ))}
                 </div>
