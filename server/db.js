@@ -363,11 +363,17 @@ export function pendingQueue(db) {
 
 export function coverage(db) {
   return db.prepare(
-    `SELECT g.*, a.name AS approved_umpire FROM games g
+    `SELECT g.*, a.name AS approved_umpire, c.id AS approved_claim_id FROM games g
      LEFT JOIN claims c ON c.game_id = g.id AND c.status = 'approved'
      LEFT JOIN umpires a ON a.id = c.umpire_id
      ORDER BY g.week, g.date, g.time`
-  ).all().map((g) => ({ ...gameRow(g), approved_umpire: g.approved_umpire }));
+  ).all().map((g) => ({ ...gameRow(g), approved_umpire: g.approved_umpire, approved_claim_id: g.approved_claim_id }));
+}
+
+// Admin removes an umpire from a game (any status). The game reopens for claims.
+export function deleteClaim(db, id) {
+  const info = db.prepare("DELETE FROM claims WHERE id = ?").run(id);
+  if (info.changes === 0) throw Object.assign(new Error("not found"), { status: 404 });
 }
 
 export function workload(db) {

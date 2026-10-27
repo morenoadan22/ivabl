@@ -118,6 +118,19 @@ export default function Admin() {
       setBusy("");
     }
   };
+  const doUnassign = async (g) => {
+    if (!window.confirm(`Remove ${g.approved_umpire} from ${g.away} vs ${g.home}?`)) return;
+    setError("");
+    setBusy(`unassign-${g.id}`);
+    try {
+      await api.unassign(g.approved_claim_id);
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy("");
+    }
+  };
 
   const saveUmpire = (id) => async (fields) => {
     setError("");
@@ -268,7 +281,13 @@ export default function Admin() {
                         {g.away} vs {g.home} <span className="text-navy/50">— {g.date}</span>
                       </span>
                       {g.approved_umpire
-                        ? <span className="text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full shrink-0">{g.approved_umpire}</span>
+                        ? <span className="flex items-center gap-1.5 shrink-0">
+                          <span className="text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full">{g.approved_umpire}</span>
+                          <button disabled={!!busy} onClick={() => doUnassign(g)}
+                            className="px-3 py-1 rounded-full bg-white border border-brick/40 text-brick text-xs font-black hover:bg-brick hover:text-white transition disabled:opacity-40">
+                            {busy === `unassign-${g.id}` ? "…" : "Remove"}
+                          </button>
+                        </span>
                         : <span className="flex items-center gap-1.5 shrink-0">
                           <span className="text-xs font-black text-brick bg-red-50 px-2.5 py-0.5 rounded-full">OPEN</span>
                           <select value={assignSel[g.id] ?? ""} onChange={(e) => setAssignSel((s) => ({ ...s, [g.id]: e.target.value }))}

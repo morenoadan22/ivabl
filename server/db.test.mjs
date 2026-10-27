@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import Database from "better-sqlite3";
 import {
   openDb, createUmpire, verifyUmpire, createSession, getSession, deleteSession,
-  upsertGame, requestClaim, withdrawClaim, decideClaim, assignUmpire, listGamesWithClaims,
+  upsertGame, requestClaim, withdrawClaim, decideClaim, assignUmpire, deleteClaim, listGamesWithClaims,
   myClaims, pendingQueue, coverage, workload, publicRoster,
   updateUmpire, adminRoster, ownProfile,
   upsertTeam, listTeams, getTeam, teamGames, setScores, replaceRoster, listRoster,
@@ -140,6 +140,22 @@ test("admin can assign an umpire directly; same two-per-week rules apply", () =>
   assignUmpire(db, starkPM, a.id);
   const extra = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "I", home: "J", location: "Central" });
   assert.throws(() => assignUmpire(db, extra, a.id), /two approved games/);
+});
+
+test("admin can remove an umpire from a game; the game reopens", () => {
+  const { db, a, b, g1 } = setup();
+  const id = requestClaim(db, a.id, g1);
+  decideClaim(db, id, true);
+  const assigned = coverage(db).find((g) => g.id === g1);
+  assert.equal(assigned.approved_umpire, "Ump One");
+  assert.ok(assigned.approved_claim_id);
+  deleteClaim(db, assigned.approved_claim_id);
+  const open = coverage(db).find((g) => g.id === g1);
+  assert.equal(open.approved_umpire, null);
+  assert.throws(() => deleteClaim(db, assigned.approved_claim_id), /not found/);
+  const id2 = requestClaim(db, b.id, g1); // another umpire can now claim it
+  decideClaim(db, id2, true);
+  assert.equal(coverage(db).find((g) => g.id === g1).approved_umpire, "Ump Two");
 });
 
 test("deny leaves the game open for others", () => {
