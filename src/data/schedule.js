@@ -10,10 +10,10 @@ export const schedule = [
   {
     "week": 1,
     "games": [
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Los Gringos", "location": "Sunflower" },
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Hot Shotz", "home": "Dawgz", "location": "Stark" },      
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Impact", "location": "Central" },
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Arabes", "location": "Calexico" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Aztecas", "location": "Sunflower" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Dawgz", "location": "Stark" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Los Gringos", "location": "Central" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Arabes", "home": "Calexico Baseball", "location": "Calexico" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Sandlot", "home": "Outlaws", "location": "Stark" }
     ]
   },
@@ -41,10 +41,11 @@ export const schedule = [
     "week": 4,
     "games": [
       { "date": "11/21", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Outlaws", "home": "Los Gringos", "location": "Sunflower" },
-      { "date": "11/21", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Impact", "location": "Sunflower" },
+      { "date": "11/21", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Sandlot", "home": "Impact", "location": "Sunflower" },
       { "date": "11/21", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Dawgz", "home": "Calexico Baseball", "location": "Calexico" },
-      { "date": "11/21", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Arabes", "home": "SBC", "location": "Central" },
-      { "date": "11/21", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Sandlot", "home": "Hot Shotz", "location": "Stark" }
+      { "date": "11/21", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "SBC", "location": "Central" },
+      { "date": "11/21", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Arabes", "home": "IVC", "location": "IVC" },
+      { "date": "11/21", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Aztecas", "home": "IVC", "location": "IVC" }
     ]
   },
   {
@@ -54,28 +55,27 @@ export const schedule = [
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Outlaws", "home": "Impact", "location": "Stark" },
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Los Gringos", "home": "Hot Shotz", "location": "Stark" },
       { "date": "11/28", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Dawgz", "home": "Sandlot", "location": "Sunflower" },
-      { "date": "11/27", "dayOfWeek": "Friday", "time": "9:00 AM", "away": "Arabes", "home": "IVC", "location": "IVC" },
-      { "date": "11/27", "dayOfWeek": "Friday", "time": "12:30 PM", "away": "IVC", "home": "Aztecas", "location": "IVC" }
+      { "date": "11/28", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Arabes", "home": "Aztecas", "location": "Sunflower" }
     ]
   },
   {
     "week": 6,
     "games": [
       { "date": "12/5", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Los Gringos", "home": "Arabes", "location": "Stark" },
-      { "date": "12/5", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Aztecas", "location": "Sunflower" },
+      { "date": "12/5", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Impact", "location": "Sunflower" },
       { "date": "12/5", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Dawgz", "home": "SBC", "location": "Central" },
-      { "date": "12/5", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Sandlot", "location": "Stark" },
+      { "date": "12/5", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Hot Shotz", "home": "Sandlot", "location": "Stark" },
       { "date": "12/5", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Outlaws", "location": "Calexico" }
     ]
   },
   {
     "week": 7,
     "games": [
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Arabes", "home": "Sandlot", "location": "Sunflower" },
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Calexico Baseball", "location": "Calexico" },
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Aztecas", "home": "Outlaws", "location": "Sunflower" },
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Impact", "home": "Dawgz", "location": "Stark" },
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "SBC", "home": "Los Gringos", "location": "Central" }
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Sandlot", "location": "Sunflower" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Los Gringos", "location": "Calexico" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Outlaws", "location": "Sunflower" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Dawgz", "location": "Stark" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Arabes", "location": "Central" }
     ]
   },
   {
@@ -84,8 +84,8 @@ export const schedule = [
       { "date": "12/19", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Impact", "home": "Hot Shotz", "location": "Stark" },
       { "date": "12/19", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Dawgz", "home": "Arabes", "location": "Stark" },
       { "date": "12/19", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Los Gringos", "home": "Calexico Baseball", "location": "Calexico" },
-      { "date": "12/19", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Outlaws", "home": "SBC", "location": "Central" },
-      { "date": "12/19", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Aztecas", "home": "Sandlot", "location": "Sunflower" }
+      { "date": "12/19", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Outlaws", "home": "SBC", "location": "Central" },
+      { "date": "12/19", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Sandlot", "location": "Sunflower" }
     ]
   }
 ];

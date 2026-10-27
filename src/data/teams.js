@@ -32,7 +32,7 @@ export const teams = [
   },
   {
     slug: "sbc",
-    division: "AA",
+    division: "A",
     name: "SBC",
     image: "/img/team/sbc.jpeg",
     imageAlt: null,

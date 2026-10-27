@@ -1,10 +1,12 @@
 // Verifies Fall/Winter 2026 scheduling rules. Run: npm run verify
-// Rules: same-tier pairs meet at most once; 5 games/week (6 in week 5 for
-// the Friday IVC doubleheader); 8 games/team (guests exempt); 4H/4A;
-// Calexico Baseball always 9:00 AM; Aztecas/SBC never share a window
-// (same day); SBC hosts at Central, Calexico Baseball hosts at Calexico
-// (home team hosts when they meet); no other team uses those fields;
-// no field+date+time clashes.
+// Rules: same-tier pairs meet at most once AND at least once (a team's
+// unplayed opponents are always cross-tier); 5 games/week (6 in week 4 for
+// the Saturday IVC doubleheader); 8 games/team (guests exempt); 4H/4A
+// (Hot Shotz 3H/5A by exception: their week-4 home game moved to SBC's
+// host field when the IVC games displaced Arabes/SBC); Calexico Baseball
+// always 9:00 AM; Aztecas/SBC never share a window (same day); SBC hosts
+// at Central, Calexico Baseball hosts at Calexico (home team hosts when
+// they meet); no other team uses those fields; no field+date+time clashes.
 import { schedule } from "../src/data/schedule.js";
 import { teams, locationMeta } from "../src/data/teams.js";
 
@@ -49,8 +51,8 @@ schedule.forEach((week, wi) => {
 });
 
 for (const w of schedule) {
-  // Week 5 runs six: four Saturday games plus the two Friday IVC games.
-  const want = w.week === 5 ? 6 : 5;
+  // Week 4 runs six: four league games plus the two Saturday IVC games.
+  const want = w.week === 4 ? 6 : 5;
   ok(w.games.length === want, `week ${w.week} has ${w.games.length} games, want ${want}`);
 }
 
@@ -72,11 +74,35 @@ for (const [pair, n] of Object.entries(sameTierPairs)) {
   ok(n <= 1, `same-tier repeat: ${pair} meets ${n}x`);
 }
 
+// Every same-tier pair must meet: the one team a team doesn't face in
+// 8 games must be from outside its tier (Aztecas/Arabes play 7 league
+// games + 1 IVC guest game, so the same still applies to them).
+{
+  const leagueTeams = teams.filter((t) => !t.guest);
+  const faced = new Set();
+  for (const w of schedule) {
+    for (const g of w.games) {
+      if (GUESTS.has(g.away) || GUESTS.has(g.home)) continue;
+      faced.add([g.away, g.home].sort().join(" v "));
+    }
+  }
+  for (let i = 0; i < leagueTeams.length; i++) {
+    for (let j = i + 1; j < leagueTeams.length; j++) {
+      const a = leagueTeams[i], b = leagueTeams[j];
+      if (a.division && a.division === b.division) {
+        const pair = [a.name, b.name].sort().join(" v ");
+        ok(faced.has(pair), `same-tier pair never meets: ${pair}`);
+      }
+    }
+  }
+}
+
 for (const t of teams) {
   if (t.guest) continue; // guest teams play a partial schedule by design
   ok(gp[t.name] === 8, `${t.name} plays ${gp[t.name]} games, want 8`);
-  ok(ha[t.name + "|H"] === 4 && ha[t.name + "|A"] === 4,
-    `${t.name} home/away ${ha[t.name + "|H"]}/${ha[t.name + "|A"]}, want 4/4`);
+  const wantHA = t.name === "Hot Shotz" ? [3, 5] : [4, 4]; // see header: IVC displacement
+  ok(ha[t.name + "|H"] === wantHA[0] && ha[t.name + "|A"] === wantHA[1],
+    `${t.name} home/away ${ha[t.name + "|H"]}/${ha[t.name + "|A"]}, want ${wantHA[0]}/${wantHA[1]}`);
 }
 
 if (failures.length) {

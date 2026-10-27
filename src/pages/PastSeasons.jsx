@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { schedule as summerSchedule } from "../data/archive/summer2026Schedule.js";
 import { teams as summerTeams } from "../data/archive/summer2026Teams.js";
-import { isPlayoffWeek } from "../data/schedule.js";
+import { isPlayoffWeek } from "../utils/games.js";
 import { computeStandings } from "../utils/standings.js";
 
 const SUMMER_2026 = {
