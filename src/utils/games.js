@@ -1,7 +1,7 @@
 // Helpers for season data served by the API (flat game list grouped client-side).
 
 export function isPlayoffWeek(week) {
-  return typeof week.week === "string" && (week.week === "Play-In" || week.week === "Semi-Final" || week.week === "Final");
+  return typeof week.week === "string" && (week.week === "Play-In" || week.week === "Quarter-Final" || week.week === "Semi-Final" || week.week === "Final");
 }
 
 export function isSeededPlaceholder(name) {

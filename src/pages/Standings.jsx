@@ -8,7 +8,7 @@ export default function Standings() {
   const [rows, setRows] = useState(null);
   const [teams, setTeams] = useState([]);
   const [error, setError] = useState("");
-  const PLAYOFF_CUTOFF = 5;
+  const PLAYOFF_CUTOFF = 6;
 
   useEffect(() => {
     Promise.all([api.seasonTeams(), api.seasonGames()])

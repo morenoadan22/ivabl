@@ -8,7 +8,7 @@ export default function Rules() {
     { title: "7+ players to start", desc: "Minimum seven players to begin a game. Ghost out the first time through the lineup." },
     { title: "Mercy rule", desc: "15 runs after 5 innings, 10 runs after 7 innings." },
     { title: "Suspended mid-inning", desc: "If a game ends in the middle of an inning, the score reverts to the start of the last completed inning." },
-    { title: "Top 5 → playoffs", desc: "Top five teams by standings qualify." },
+    { title: "Top 6 → playoffs", desc: "Top six qualify. Seeds 1–2 get quarter-final byes; 3v6 and 4v5 play in, then semis and final." },
     { title: "2-game eligibility", desc: "Players need 2 regular-season games to be playoff-eligible." },
     { title: "Roster lock", desc: "Playoff rosters are locked after Week 6." },
     { title: "Respect the field", desc: "No tobacco or alcohol is permitted on the field. Leave it cleaner than you found it." },
