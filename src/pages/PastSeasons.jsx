@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { schedule as summerSchedule } from "../data/archive/summer2026Schedule.js";
 import { teams as summerTeams } from "../data/archive/summer2026Teams.js";
+import { schedule as winterSchedule } from "../data/archive/winter2025Schedule.js";
+import { teams as winterTeams } from "../data/archive/winter2025Teams.js";
+import { schedule as summer25Schedule } from "../data/archive/summer2025Schedule.js";
+import { teams as summer25Teams } from "../data/archive/summer2025Teams.js";
 import { isPlayoffWeek } from "../utils/games.js";
 import { computeStandings } from "../utils/standings.js";
 
@@ -15,6 +19,136 @@ const SUMMER_2026 = {
 
 function teamImage(name) {
   return summerTeams.find((t) => t.name === name)?.image;
+}
+
+const OLDER_SEASONS = [
+  {
+    label: "Winter 2025",
+    meta: "6 teams • November – January • Sunflower, Stark, Central",
+    champion: "Aztecas",
+    championImage: "/img/team/aztecas_winter_25.jpg",
+    championNote: "Beat Impact 8–5 in the final on Jan 21 at Stark Field.",
+    finalLine: "FINAL: AZT 8 - IMP 5",
+    statsCsv: "/archive/winter-2025-stats.csv",
+    schedule: winterSchedule,
+    teams: winterTeams,
+  },
+  {
+    label: "Summer 2025",
+    meta: "8 teams • May – July • Central, Calexico",
+    champion: null,
+    championImage: null,
+    championNote: "",
+    finalLine: "",
+    statsCsv: "/archive/summer-2025-stats.csv",
+    schedule: summer25Schedule,
+    teams: summer25Teams,
+  },
+];
+
+function ArchiveSeason({ season }) {
+  const rows = computeStandings(season.schedule);
+  const playoffWeeks = season.schedule.filter(isPlayoffWeek);
+  const teamImageFor = (name) => season.teams.find((t) => t.name === name)?.image;
+  return (
+    <div className="rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+      <div className="px-6 py-4 border-b bg-gradient-to-r from-navy to-navy-mid flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 className="font-display font-black text-white text-lg">{season.label}</h2>
+          <p className="text-white/70 text-sm mt-0.5">{season.meta}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {season.champion && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-black tracking-widest bg-amber-300 text-navy px-3 py-1.5 rounded-full">
+              {season.champion.toUpperCase()} — CHAMPS
+            </span>
+          )}
+          <a href={season.statsCsv} download className="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold hover:bg-white/20 transition">
+            Download stats (CSV)
+          </a>
+        </div>
+      </div>
+      {season.champion && (
+        <div className="px-6 py-3 flex items-center gap-3 bg-amber-50/60 border-b border-amber-200/50">
+          {season.championImage && (
+            <img src={season.championImage} alt={`${season.champion} champions`} className="h-12 w-12 rounded-full object-cover ring-2 ring-amber-300 shrink-0" loading="lazy" />
+          )}
+          <p className="text-sm text-navy/70">
+            <strong className="text-navy">{season.champion}</strong> {season.championNote}{" "}
+            <span className="font-bold text-navy">{season.finalLine}</span>
+          </p>
+        </div>
+      )}
+      <div className="px-6 pt-4 text-[11px] font-bold tracking-widest text-navy/50">FINAL STANDINGS • PLAYOFFS EXCLUDED</div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-[11px] tracking-widest font-bold text-navy/60 border-b bg-cream/60">
+              <th className="text-left px-4 py-3">#</th>
+              <th className="text-left px-4 py-3">TEAM</th>
+              <th className="text-center px-3 py-3">W</th>
+              <th className="text-center px-3 py-3">L</th>
+              <th className="text-center px-3 py-3">D</th>
+              <th className="text-center px-3 py-3">PCT</th>
+              <th className="text-center px-3 py-3">RD</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const img = teamImageFor(r.name);
+              return (
+                <tr key={r.name} className="border-b last:border-0 border-black/5 hover:bg-cream/50">
+                  <td className="px-4 py-3">
+                    <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full text-xs font-black px-1.5 bg-navy/10 text-navy/60">{r.rank}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="flex items-center gap-2.5">
+                      {img && <img src={img} alt="" className="h-7 w-7 rounded-full object-cover ring-1 ring-black/10" loading="lazy" />}
+                      <span className="font-bold text-navy">{r.name}</span>
+                      {r.name === season.champion && (
+                        <span className="text-[10px] font-bold tracking-widest bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">CHAMPS</span>
+                      )}
+                    </span>
+                  </td>
+                  <td className="text-center font-semibold">{r.wins}</td>
+                  <td className="text-center text-navy/70">{r.losses}</td>
+                  <td className="text-center text-navy/70">{r.draws}</td>
+                  <td className="text-center font-mono font-semibold">{r.pct.toFixed(3)}</td>
+                  <td className={`text-center font-bold ${r.rd > 0 ? "text-emerald-700" : r.rd < 0 ? "text-red-600" : "text-navy/50"}`}>{r.rd > 0 ? `+${r.rd}` : r.rd}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {playoffWeeks.length > 0 && (
+        <div className="p-4 sm:p-5 space-y-4 border-t">
+          <div className="text-[11px] font-black tracking-[0.16em] text-brick">PLAYOFFS</div>
+          <div className="grid gap-2">
+            {playoffWeeks.flatMap((week, wi) =>
+              week.games.map((g, gi) => (
+                <div key={`${week.week}-${wi}-${gi}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-black/5 px-4 py-2.5 text-sm">
+                  <span className="text-[10px] font-bold tracking-widest text-navy/40">{String(week.week).toUpperCase()}</span>
+                  <span className="font-bold text-navy">{g.away} {g.result ? g.result.away : ""}</span>
+                  <span className="text-navy/40">@</span>
+                  <span className="font-bold text-navy">{g.home} {g.result ? g.result.home : ""}</span>
+                  <span className="text-xs text-navy/50">{g.date} • {g.location}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+      <div className="p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t bg-cream/30">
+        {season.teams.map((t) => (
+          <div key={t.slug} className="rounded-xl border border-black/5 overflow-hidden bg-white">
+            {t.image && <img src={t.image} alt={t.name} className="w-full h-24 object-cover" loading="lazy" />}
+            <div className="px-3 py-2 text-sm font-bold text-navy">{t.name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function PastSeasons() {
@@ -172,6 +306,11 @@ export default function PastSeasons() {
           ))}
         </div>
       </div>
+
+      {/* Older archived seasons */}
+      {OLDER_SEASONS.map((s) => (
+        <ArchiveSeason key={s.label} season={s} />
+      ))}
     </div>
   );
 }
