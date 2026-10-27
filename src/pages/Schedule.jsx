@@ -249,7 +249,7 @@ export default function Schedule() {
           </div>
           <div className="bg-cream border-t md:border-t-0 md:border-l border-gold-muted/60 p-6 flex flex-col items-center justify-center gap-4">
             <img src="/img/league_logo.jpeg" alt="League logo" className="w-full max-w-[260px] rounded-2xl shadow-lg bg-white p-3" />
-            <p className="text-xs font-semibold text-navy/60 text-center">Imperial Valley’s wood-bat league — since 2026</p>
+            <p className="text-xs font-semibold text-navy/60 text-center">Imperial Valley’s wood-bat league — since 2019</p>
           </div>
         </div>
       </div>

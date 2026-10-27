@@ -71,8 +71,8 @@ export const schedule = [
   {
     "week": 7,
     "games": [
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Sandlot", "location": "Sunflower" },
-      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Los Gringos", "location": "Calexico" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Los Gringos", "location": "Sunflower" },
+      { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Calexico Baseball", "home": "Sandlot", "location": "Calexico" },
       { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Aztecas", "home": "Outlaws", "location": "Sunflower" },
       { "date": "12/12", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Dawgz", "location": "Stark" },
       { "date": "12/12", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Arabes", "location": "Central" }

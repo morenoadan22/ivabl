@@ -113,7 +113,7 @@ export function getTeamByName(name) {
 export const locationMeta = {
   "Stark Field": { id: "stark", name: "Stark Field", address: "830 S 4th St, El Centro, CA 92243" },
   "Stark": { id: "stark", name: "Stark Field", address: "830 S 4th St, El Centro, CA 92243" },
-  "Sunflower": { id: "sunflower", name: "Sunflower Park", address: "Sunflower Park Baseball Field, El Centro" },
+  "Sunflower": { id: "sunflower", name: "Sunflower Park", address: "Sunflower Park Baseball Field, El Centro, CA 92243" },
   "Calexico": { id: "calexico", name: "Calexico High School", address: "1030 Encinas Ave, Calexico, CA 92231" },
   "Central": { id: "central", name: "Central Union HS", address: "1001 W Brighton Ave, El Centro, CA 92243" },
   "Brawley": { id: "brawley", name: "Wiest Field", address: "1044 Magnolia St, Brawley, CA 92227" },

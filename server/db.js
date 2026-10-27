@@ -214,12 +214,37 @@ export function upsertGame(db, game) {
 }
 
 export function requestClaim(db, umpireId, gameId) {
-  const game = db.prepare("SELECT id FROM games WHERE id = ?").get(gameId);
+  const game = db.prepare("SELECT week, date, time, location FROM games WHERE id = ?").get(gameId);
   if (!game) throw Object.assign(new Error("unknown game"), { status: 404 });
   const dup = db.prepare("SELECT id FROM claims WHERE game_id = ? AND umpire_id = ? AND status != 'denied'").get(gameId, umpireId);
   if (dup) throw Object.assign(new Error("already claimed"), { status: 409 });
+  assertSecondGameOk(db, umpireId, game);
   const info = db.prepare("INSERT INTO claims (game_id, umpire_id) VALUES (?, ?)").run(gameId, umpireId);
   return Number(info.lastInsertRowid);
+}
+
+// Two approved games per umpire per week: same field, no overlap (same date + time).
+function approvedThatWeek(db, umpireId, week) {
+  return db.prepare(
+    `SELECT g.date, g.time, g.location FROM claims c JOIN games g ON g.id = c.game_id
+     WHERE c.umpire_id = ? AND c.status = 'approved' AND g.week = ?`
+  ).all(umpireId, week);
+}
+
+function assertSecondGameOk(db, umpireId, game) {
+  const approved = approvedThatWeek(db, umpireId, game.week);
+  if (approved.length >= 2) {
+    throw Object.assign(new Error("umpire already has two approved games that week"), { status: 409 });
+  }
+  for (const ex of approved) {
+    if (ex.date === game.date && ex.time === game.time) {
+      throw Object.assign(new Error("game overlaps an approved game"), { status: 409 });
+    }
+    if (ex.location !== game.location) {
+      throw Object.assign(new Error("second game must be on the same field"), { status: 409 });
+    }
+  }
+  return approved.length;
 }
 
 export function withdrawClaim(db, umpireId, claimId) {
@@ -233,16 +258,9 @@ export function decideClaim(db, claimId, approve) {
   const row = db.prepare("SELECT * FROM claims WHERE id = ?").get(claimId);
   if (!row) throw Object.assign(new Error("not found"), { status: 404 });
   if (row.status !== "pending") throw Object.assign(new Error("already decided"), { status: 409 });
-  const week = db.prepare("SELECT week FROM games WHERE id = ?").get(row.game_id)?.week;
-  if (approve && week !== undefined) {
-    const existing = db.prepare(
-      `SELECT c.id FROM claims c JOIN games g ON g.id = c.game_id
-       WHERE c.umpire_id = ? AND c.status = 'approved' AND g.week = ?`
-    ).get(row.umpire_id, week);
-    if (existing) {
-      throw Object.assign(new Error("umpire already has an approved game that week"), { status: 409 });
-    }
-  }
+  const game = db.prepare("SELECT week, date, time, location FROM games WHERE id = ?").get(row.game_id);
+  const week = game?.week;
+  const alreadyApproved = approve && game ? assertSecondGameOk(db, row.umpire_id, game) : 0;
   const decide = db.transaction(() => {
     db.prepare("UPDATE claims SET status = ?, decided_at = datetime('now') WHERE id = ?").run(
       approve ? "approved" : "denied", claimId
@@ -251,13 +269,23 @@ export function decideClaim(db, claimId, approve) {
       db.prepare(
         "UPDATE claims SET status = 'denied', decided_at = datetime('now') WHERE game_id = ? AND id != ? AND status = 'pending'"
       ).run(row.game_id, claimId);
-      // One game per umpire per week: first approval drops their other pending requests that week.
       if (week !== undefined) {
-        db.prepare(
-          `UPDATE claims SET status = 'denied', decided_at = datetime('now')
-           WHERE umpire_id = ? AND status = 'pending' AND id != ?
-           AND game_id IN (SELECT id FROM games WHERE week = ?)`
-        ).run(row.umpire_id, claimId, week);
+        if (alreadyApproved >= 1) {
+          // Second approval: the week is full, drop their other pending requests that week.
+          db.prepare(
+            `UPDATE claims SET status = 'denied', decided_at = datetime('now')
+             WHERE umpire_id = ? AND status = 'pending' AND id != ?
+             AND game_id IN (SELECT id FROM games WHERE week = ?)`
+          ).run(row.umpire_id, claimId, week);
+        } else {
+          // First approval: keep compatible requests (same field, no overlap), drop the rest.
+          db.prepare(
+            `UPDATE claims SET status = 'denied', decided_at = datetime('now')
+             WHERE umpire_id = ? AND status = 'pending' AND id != ?
+             AND game_id IN (SELECT id FROM games WHERE week = ?
+               AND (location != ? OR (date = ? AND time = ?)))`
+          ).run(row.umpire_id, claimId, week, game.location, game.date, game.time);
+        }
       }
     }
   });

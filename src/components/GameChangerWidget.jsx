@@ -44,8 +44,7 @@ export default function GameChangerWidget() {
               window.GC.scoreboard.init({
                 target: `#${TARGET_ID}`,
                 widgetId: WIDGET_ID,
-                maxVerticalGamesVisible: 1,
-                maxHorizontalGamesVisible: 4,
+                maxVerticalGamesVisible: 6,
               });
               initialized.current = true;
             } catch (e) {
@@ -94,8 +93,7 @@ export default function GameChangerWidget() {
         ) : (
           <div
             id={TARGET_ID}
-            style={{ height: 250, minHeight: 250 }}
-            className="w-full overflow-auto flex-1"
+            className="w-full overflow-auto flex-1 min-h-[250px]"
           />
         )}
       </div>

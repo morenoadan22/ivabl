@@ -69,20 +69,44 @@ test("approve auto-denies rival pending claims; decided claims are final", () =>
   assert.throws(() => decideClaim(db, idB, true), /already decided/);
 });
 
-test("first approval that week drops the umpire's other pending claims; second approval blocked", () => {
-  const { db, a, g1, g2 } = setup();
-  const idA1 = requestClaim(db, a.id, g1);
-  const idA2 = requestClaim(db, a.id, g2);
-  decideClaim(db, idA1, true);
-  const rows = db.prepare("SELECT id, status FROM claims ORDER BY id").all();
-  assert.deepEqual(rows.map((r) => r.status), ["approved", "denied"]);
-  assert.throws(() => decideClaim(db, idA2, true), /already decided/);
-  const g3 = upsertGame(db, { week: 1, date: "11/1", dayOfWeek: "Saturday", time: "9:00 AM", away: "E", home: "F", location: "Stark" });
-  const idA3 = requestClaim(db, a.id, g3);
-  assert.throws(() => decideClaim(db, idA3, true), /already has an approved game that week/);
+test("two games per week allowed on the same field at different times", () => {
+  const { db, a } = setup();
+  const starkAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "A", home: "B", location: "Stark" });
+  const starkPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "C", home: "D", location: "Stark" });
+  const id1 = requestClaim(db, a.id, starkAM);
+  const id2 = requestClaim(db, a.id, starkPM);
+  decideClaim(db, id1, true);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id2).status, "pending"); // compatible: kept
+  decideClaim(db, id2, true); // second game, same field, no overlap: allowed
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id2).status, "approved");
+});
+
+test("incompatible requests blocked; third request blocked; second approval drops the rest", () => {
+  const { db, a } = setup();
+  const friAM = upsertGame(db, { week: 1, date: "11/27", dayOfWeek: "Friday", time: "9:00 AM", away: "A", home: "B", location: "Stark" });
+  const satAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "C", home: "D", location: "Stark" });
+  const satPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "E", home: "F", location: "Stark" });
+  const id1 = requestClaim(db, a.id, satAM);
+  decideClaim(db, id1, true);
+  // same date + time as the approved game: overlaps (even on another field)
+  const sunAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "G", home: "H", location: "Sunflower" });
+  assert.throws(() => requestClaim(db, a.id, sunAM), /overlap/);
+  // different time, other field: wrong field
+  const sunPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "I", home: "J", location: "Sunflower" });
+  assert.throws(() => requestClaim(db, a.id, sunPM), /same field/);
+  // compatible pendings are kept after the first approval ...
+  const id2 = requestClaim(db, a.id, satPM);
+  const id3 = requestClaim(db, a.id, friAM);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id2).status, "pending");
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id3).status, "pending");
+  decideClaim(db, id2, true); // second approval drops the remaining pendings
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(id3).status, "denied");
+  const extra = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "K", home: "L", location: "Central" });
+  assert.throws(() => requestClaim(db, a.id, extra), /two approved games/);
+  // different week: allowed
   const g4 = upsertGame(db, { week: 2, date: "11/8", dayOfWeek: "Saturday", time: "9:00 AM", away: "E", home: "F", location: "Stark" });
   const idA4 = requestClaim(db, a.id, g4);
-  decideClaim(db, idA4, true); // different week: allowed
+  decideClaim(db, idA4, true);
   assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(idA4).status, "approved");
 });
 

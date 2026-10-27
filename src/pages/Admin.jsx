@@ -207,7 +207,7 @@ export default function Admin() {
       {error && <p className="mt-3 text-sm text-brick font-semibold">{error}</p>}
 
       <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">Pending requests</h2>
-      <p className="text-sm text-white/60 mb-2">One game per umpire per week — approving drops their other pending requests that week.</p>
+      <p className="text-sm text-white/60 mb-2">Up to two games per umpire per week — same field, different times. Approving a second game drops their other pending requests that week.</p>
       {queue.length === 0 ? (
         <p className="text-sm text-white/60">Queue is clear.</p>
       ) : (
