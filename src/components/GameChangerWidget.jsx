@@ -44,7 +44,7 @@ export default function GameChangerWidget() {
               window.GC.scoreboard.init({
                 target: `#${TARGET_ID}`,
                 widgetId: WIDGET_ID,
-                maxVerticalGamesVisible: 6,
+                maxVerticalGamesVisible: 4,
               });
               initialized.current = true;
             } catch (e) {
