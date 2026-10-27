@@ -49,9 +49,9 @@ export default function Sponsors() {
             <div className="text-sm text-navy/60 mt-1 leading-relaxed">Proceeds go back to the sports programs at the schools that lend us their fields — Calexico, Central, Brawley and more.</div>
           </div>
           <div className="rounded-xl border border-black/5 bg-white p-5">
-            <div className="text-gold text-xs font-black tracking-widest">501(C)(3) • TAX-DEDUCTIBLE</div>
+            <div className="text-gold text-xs font-black tracking-widest">501(C)(7) • SOCIAL CLUB</div>
             <div className="font-bold text-navy mt-1">Business Exposure + Tax Break</div>
-            <div className="text-sm text-navy/60 mt-1 leading-relaxed">We’re a registered 501(c)(3) non-profit — your sponsorship is tax-deductible and gets you exposure on the field, website, and socials.</div>
+            <div className="text-sm text-navy/60 mt-1 leading-relaxed">We’re a registered 501(c)(7) social club — your sponsorship gets you exposure on the field, website, and socials, and businesses can typically deduct it as advertising.</div>
           </div>
           <div className="rounded-xl border border-gold/20 bg-amber-50/30 p-5 sm:col-span-2">
             <div className="text-gold text-xs font-black tracking-widest">BUILT-IN AUDIENCE</div>
