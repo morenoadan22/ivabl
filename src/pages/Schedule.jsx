@@ -63,7 +63,6 @@ function GameLine({ game, teams, showMeta = true, cornerBadge = null }) {
       )}
       {showMeta && (
       <div className="flex flex-wrap items-center gap-1.5 mb-1">
-        <span className="text-[10px] font-black tracking-widest px-1 py-0.5 rounded bg-gold text-navy shrink-0">UPCOMING</span>
         <span className="text-[11px] font-bold text-navy/60 shrink-0">{game.date}</span>
         {game.time && <span className="text-[11px] font-black px-1.5 py-0.5 rounded bg-navy text-white shrink-0">{game.time}</span>}
         <Link to="/locations" className="text-[11px] font-black px-1.5 py-0.5 rounded bg-white border border-amber-200 text-navy hover:bg-navy hover:text-white transition shrink-0">@{game.location}</Link>
