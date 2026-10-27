@@ -63,3 +63,6 @@ docs/
 
 # Local umpire database (login code hashes, dev-only data)
 data/
+*.db
+*.db-shm
+*.db-wal
