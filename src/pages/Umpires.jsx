@@ -16,6 +16,23 @@ function timeToMinutes(t) {
   return h * 60 + Number(m[2]);
 }
 
+// Umpires only see 3 weeks ahead: games from today through 21 days out.
+// Games without a parseable MM/DD date (e.g. future playoff placeholders) stay visible.
+const SEASON_YEAR = 2026;
+const AHEAD_DAYS = 21;
+function gameDay(g) {
+  const m = /^(\d{1,2})\/(\d{1,2})/.exec(g.date || "");
+  if (!m) return null;
+  return new Date(SEASON_YEAR, Number(m[1]) - 1, Number(m[2]));
+}
+function inWindow(g) {
+  const d = gameDay(g);
+  if (!d) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d >= today && d <= new Date(today.getTime() + AHEAD_DAYS * 86400000);
+}
+
 export default function Umpires() {
   const { user, login, logout } = useSession();
   const [roster, setRoster] = useState([]);
@@ -46,7 +63,7 @@ export default function Umpires() {
 
   const weeks = useMemo(() => {
     const byWeek = new Map();
-    for (const g of games) {
+    for (const g of games.filter(inWindow)) {
       if (!byWeek.has(g.week)) byWeek.set(g.week, new Map());
       const byTime = byWeek.get(g.week);
       if (!byTime.has(g.time)) byTime.set(g.time, []);
@@ -191,8 +208,11 @@ export default function Umpires() {
         </button>
       )}
 
-      <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">All games</h2>
-      <p className="text-sm text-white/60 mb-2">Request as many games as you like each week — the first one approved is yours, and your other requests that week are dropped.</p>
+      <h2 className="font-display font-bold text-white text-lg mt-6 mb-1">Upcoming games</h2>
+      <p className="text-sm text-white/60 mb-2">Showing the next 3 weeks. Up to two games per week — same field, different times. Approving a second game drops your other requests that week.</p>
+      {weeks.length === 0 && (
+        <p className="text-sm text-white/60">No games in the next 3 weeks.</p>
+      )}
       <div className="space-y-4">
         {weeks.map(([week, slots]) => (
           <div key={week} className="bg-white rounded-2xl shadow ring-1 ring-black/5 overflow-hidden">

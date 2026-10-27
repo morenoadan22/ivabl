@@ -15,7 +15,7 @@ function formatPhone(v) {
   return `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`;
 }
 
-const PAYMENT_OPTIONS = ["Zelle", "Venmo", "Cash"];
+const PAYMENT_OPTIONS = ["Zelle", "Venmo", "Cash", "Check"];
 
 function PaymentSelect({ value, onChange }) {
   const [open, setOpen] = useState(false);
