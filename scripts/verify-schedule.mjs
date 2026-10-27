@@ -42,10 +42,13 @@ schedule.forEach((week, wi) => {
     ok(!slots.has(slot), `${w}: field clash ${slot}`);
     slots.add(slot);
     // venue rules: fixed home fields, home team hosts when they meet
+    // Exception: week 1 SBC @ Los Gringos moved Central -> Sunflower.
+    const isWeek1Relocation = week.week === 1 && g.away === "SBC" && g.home === "Los Gringos";
     const fixed = (t) => (t === "SBC" ? "Central" : t === "Calexico Baseball" ? "Calexico" : null);
     const vh = fixed(g.home), va = fixed(g.away);
     const want = vh && va && vh !== va ? vh : vh || va;
-    if (want) ok(g.location === want, `${w}: ${g.away} @ ${g.home} should be at ${want}, got ${g.location}`);
+    if (isWeek1Relocation) ok(g.location === "Sunflower", `${w}: ${g.away} @ ${g.home} should be at Sunflower, got ${g.location}`);
+    else if (want) ok(g.location === want, `${w}: ${g.away} @ ${g.home} should be at ${want}, got ${g.location}`);
     else ok(g.location !== "Central" && g.location !== "Calexico", `${w}: ${g.away} vs ${g.home} misuses ${g.location}`);
   }
 });

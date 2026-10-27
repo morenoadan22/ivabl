@@ -6,13 +6,14 @@
 // same-tier teams meet at most once.
 // SBC hosts at Central, Calexico Baseball hosts at Calexico;
 // other teams never use those fields.
+// Exception: week 1 SBC @ Los Gringos is at Sunflower.
 export const schedule = [
   {
     "week": 1,
     "games": [
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Hot Shotz", "home": "Aztecas", "location": "Sunflower" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "Impact", "home": "Dawgz", "location": "Stark" },
-      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Los Gringos", "location": "Central" },
+      { "date": "10/31", "dayOfWeek": "Saturday", "time": "12:30 PM", "away": "SBC", "home": "Los Gringos", "location": "Sunflower" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Arabes", "home": "Calexico Baseball", "location": "Calexico" },
       { "date": "10/31", "dayOfWeek": "Saturday", "time": "9:00 AM", "away": "Sandlot", "home": "Outlaws", "location": "Stark" }
     ]
