@@ -85,6 +85,8 @@ export const teams = [
     imageAlt: null,
     manager: "Victor Benitez",
     managerUrl: "https://www.facebook.com/vabenitez10",
+    manager2: "Kikan Navarette",
+    manager2Url: "https://www.facebook.com/christian.k.navarrete",
   },
   {
     slug: "impact",
