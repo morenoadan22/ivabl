@@ -80,7 +80,7 @@ export const teams = [
   {
     slug: "arabes",
     division: "AA",
-    name: "Arabes",
+    name: "AraBullies",
     image: "/img/team/arabes_summer_26.jpeg",
     imageAlt: null,
     manager: "Victor Benitez",

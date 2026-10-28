@@ -1,10 +1,10 @@
 date,time,home,away,location,duration
 10/31/2026,9:00 AM,Aztecas,Hot Shotz,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 10/31/2026,12:30 PM,Dawgz,Impact,"830 S 4th St, El Centro, CA 92243",150
-10/31/2026,12:30 PM,Los Gringos,SBC,"1001 W Brighton Ave, El Centro, CA 92243",150
-10/31/2026,9:00 AM,Calexico Baseball,Arabes,"1030 Encinas Ave, Calexico, CA 92231",150
+10/31/2026,12:30 PM,Los Gringos,SBC,"Sunflower Park Baseball Field, El Centro, CA 92243",150
+10/31/2026,9:00 AM,Calexico Baseball,AraBullies,"1030 Encinas Ave, Calexico, CA 92231",150
 10/31/2026,9:00 AM,Outlaws,The Sandlot,"830 S 4th St, El Centro, CA 92243",150
-11/07/2026,12:30 PM,Arabes,Impact,"Sunflower Park Baseball Field, El Centro, CA 92243",150
+11/07/2026,12:30 PM,AraBullies,Impact,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 11/07/2026,12:30 PM,Outlaws,Hot Shotz,"830 S 4th St, El Centro, CA 92243",150
 11/07/2026,9:00 AM,Aztecas,Calexico Baseball,"1030 Encinas Ave, Calexico, CA 92231",150
 11/07/2026,12:30 PM,SBC,The Sandlot,"1001 W Brighton Ave, El Centro, CA 92243",150
@@ -13,7 +13,7 @@ date,time,home,away,location,duration
 11/14/2026,9:00 AM,Aztecas,SBC,"1001 W Brighton Ave, El Centro, CA 92243",150
 11/14/2026,12:30 PM,Dawgz,Outlaws,"830 S 4th St, El Centro, CA 92243",150
 11/14/2026,9:00 AM,Impact,Calexico Baseball,"1030 Encinas Ave, Calexico, CA 92231",150
-11/14/2026,9:00 AM,Hot Shotz,Arabes,"Sunflower Park Baseball Field, El Centro, CA 92243",150
+11/14/2026,9:00 AM,Hot Shotz,AraBullies,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 11/21/2026,12:30 PM,Los Gringos,Outlaws,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 11/21/2026,9:00 AM,Impact,The Sandlot,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 11/21/2026,9:00 AM,Calexico Baseball,Dawgz,"1030 Encinas Ave, Calexico, CA 92231",150
@@ -22,8 +22,8 @@ date,time,home,away,location,duration
 11/28/2026,9:00 AM,Impact,Outlaws,"830 S 4th St, El Centro, CA 92243",150
 11/28/2026,12:30 PM,Hot Shotz,Los Gringos,"830 S 4th St, El Centro, CA 92243",150
 11/28/2026,9:00 AM,The Sandlot,Dawgz,"Sunflower Park Baseball Field, El Centro, CA 92243",150
-11/28/2026,12:30 PM,Aztecas,Arabes,"Sunflower Park Baseball Field, El Centro, CA 92243",150
-12/05/2026,9:00 AM,Arabes,Los Gringos,"830 S 4th St, El Centro, CA 92243",150
+11/28/2026,12:30 PM,Aztecas,AraBullies,"Sunflower Park Baseball Field, El Centro, CA 92243",150
+12/05/2026,9:00 AM,AraBullies,Los Gringos,"830 S 4th St, El Centro, CA 92243",150
 12/05/2026,9:00 AM,Impact,Aztecas,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 12/05/2026,12:30 PM,SBC,Dawgz,"1001 W Brighton Ave, El Centro, CA 92243",150
 12/05/2026,12:30 PM,The Sandlot,Hot Shotz,"830 S 4th St, El Centro, CA 92243",150
@@ -32,9 +32,9 @@ date,time,home,away,location,duration
 12/12/2026,9:00 AM,The Sandlot,Calexico Baseball,"1030 Encinas Ave, Calexico, CA 92231",150
 12/12/2026,9:00 AM,Outlaws,Aztecas,"Sunflower Park Baseball Field, El Centro, CA 92243",150
 12/12/2026,9:00 AM,Dawgz,Hot Shotz,"830 S 4th St, El Centro, CA 92243",150
-12/12/2026,12:30 PM,Arabes,SBC,"1001 W Brighton Ave, El Centro, CA 92243",150
+12/12/2026,12:30 PM,AraBullies,SBC,"1001 W Brighton Ave, El Centro, CA 92243",150
 12/19/2026,9:00 AM,Hot Shotz,Impact,"830 S 4th St, El Centro, CA 92243",150
-12/19/2026,12:30 PM,Arabes,Dawgz,"830 S 4th St, El Centro, CA 92243",150
+12/19/2026,12:30 PM,AraBullies,Dawgz,"830 S 4th St, El Centro, CA 92243",150
 12/19/2026,9:00 AM,Calexico Baseball,Los Gringos,"1030 Encinas Ave, Calexico, CA 92231",150
 12/19/2026,12:30 PM,SBC,Outlaws,"1001 W Brighton Ave, El Centro, CA 92243",150
 12/19/2026,9:00 AM,The Sandlot,Aztecas,"Sunflower Park Baseball Field, El Centro, CA 92243",150

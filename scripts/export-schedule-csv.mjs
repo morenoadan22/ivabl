@@ -10,7 +10,7 @@ const DURATION_MIN = 150; // 2.5 hours per game
 // Schedule name -> exact GameChanger team name. Teams with no entry (e.g. IVC,
 // which is not a confirmed GC team) are left out of the export.
 const GC_NAME = {
-  Arabes: "Arabes",
+  AraBullies: "AraBullies",
   Aztecas: "Aztecas",
   "Calexico Baseball": "Calexico Baseball",
   Dawgz: "Dawgz",

@@ -3,7 +3,7 @@
 // unplayed opponents are always cross-tier); 5 games/week (6 in week 4 for
 // the Saturday IVC doubleheader); 8 games/team (guests exempt); 4H/4A
 // (Hot Shotz 3H/5A by exception: their week-4 home game moved to SBC's
-// host field when the IVC games displaced Arabes/SBC); Calexico Baseball
+// host field when the IVC games displaced AraBullies/SBC); Calexico Baseball
 // always 9:00 AM; Aztecas/SBC never share a window (same day); SBC hosts
 // at Central, Calexico Baseball hosts at Calexico (home team hosts when
 // they meet); no other team uses those fields; no field+date+time clashes.
@@ -78,7 +78,7 @@ for (const [pair, n] of Object.entries(sameTierPairs)) {
 }
 
 // Every same-tier pair must meet: the one team a team doesn't face in
-// 8 games must be from outside its tier (Aztecas/Arabes play 7 league
+// 8 games must be from outside its tier (Aztecas/AraBullies play 7 league
 // games + 1 IVC guest game, so the same still applies to them).
 {
   const leagueTeams = teams.filter((t) => !t.guest);
