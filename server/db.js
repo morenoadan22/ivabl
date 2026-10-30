@@ -276,7 +276,9 @@ export function decideClaim(db, claimId, approve) {
 }
 
 // Admin directly assigns an umpire to a game (no request needed).
-// Same rules as approving: two games per week max, same field, no overlap.
+// Umpire rules (two games per week max, same field, no overlap) do not apply:
+// admins may place any umpire on any game. Game integrity still holds: the
+// game must exist and have no approved umpire, and the umpire must be active.
 export function assignUmpire(db, gameId, umpireId) {
   const game = db.prepare("SELECT week, date, time, location FROM games WHERE id = ?").get(gameId);
   if (!game) throw Object.assign(new Error("unknown game"), { status: 404 });
@@ -286,7 +288,6 @@ export function assignUmpire(db, gameId, umpireId) {
   if (taken) throw Object.assign(new Error("game already assigned"), { status: 409 });
   const dup = db.prepare("SELECT id FROM claims WHERE game_id = ? AND umpire_id = ? AND status != 'denied'").get(gameId, umpireId);
   if (dup) throw Object.assign(new Error("already claimed"), { status: 409 });
-  assertSecondGameOk(db, umpireId, game);
   // Assignments never touch other claims: rivals and extra requests stay
   // pending for the admin to decide; the checks above reject invalid approvals.
   const info = db.prepare(

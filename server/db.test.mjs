@@ -119,7 +119,7 @@ test("myClaims and queue expose the numeric claim id (not the game id)", () => {
   assert.equal(myClaims(db, a.id).length, 0);
 });
 
-test("admin can assign an umpire directly; same two-per-week rules apply", () => {
+test("admin can assign an umpire directly; umpire rules do not apply", () => {
   const { db, a, b, admin } = setup();
   const starkAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "A", home: "B", location: "Stark" });
   const rival = requestClaim(db, b.id, starkAM);
@@ -132,15 +132,18 @@ test("admin can assign an umpire directly; same two-per-week rules apply", () =>
   assert.throws(() => assignUmpire(db, starkAM, 9999), /unknown umpire/);
   assert.throws(() => assignUmpire(db, starkAM, admin.id), /unknown umpire/);
   assert.throws(() => assignUmpire(db, starkAM, b.id), /game already assigned/);
-  const starkPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "C", home: "D", location: "Stark" });
-  // two-per-week rule: overlap and wrong field blocked, compatible second ok
+  // umpire rules do not bind admins: overlap, other field, and third game all ok
   const sunAM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "9:00 AM", away: "E", home: "F", location: "Sunflower" });
-  assert.throws(() => assignUmpire(db, sunAM, a.id), /overlap/);
+  const overId = assignUmpire(db, sunAM, a.id);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(overId).status, "approved");
   const sunPM = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "G", home: "H", location: "Sunflower" });
-  assert.throws(() => assignUmpire(db, sunPM, a.id), /same field/);
-  assignUmpire(db, starkPM, a.id);
-  const extra = upsertGame(db, { week: 1, date: "10/31", dayOfWeek: "Saturday", time: "12:30 PM", away: "I", home: "J", location: "Central" });
-  assert.throws(() => assignUmpire(db, extra, a.id), /two approved games/);
+  const thirdId = assignUmpire(db, sunPM, a.id);
+  assert.equal(db.prepare("SELECT status FROM claims WHERE id = ?").get(thirdId).status, "approved");
+  const approved = db.prepare(
+    `SELECT COUNT(*) AS n FROM claims c JOIN games g ON g.id = c.game_id
+     WHERE c.umpire_id = ? AND c.status = 'approved' AND g.week = 1`
+  ).get(a.id).n;
+  assert.equal(approved, 3);
 });
 
 test("admin can reopen an assignment; the request goes back to pending", () => {
